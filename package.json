@@ -2,6 +2,10 @@
   "name": "idt",
   "version": "1.0.1",
   "description": "Integration Develop Tool[Lagou]",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lagou-Frontend/idt.git"
+  },
   "main": "./start",
   "scripts": {
     "test": "./debug"
