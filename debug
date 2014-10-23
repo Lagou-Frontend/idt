@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#make this runnable: sudo chmod +x ./start
+#exit: ctrl/comm + z
+
+#to run this shell, you should run : `sudo npm install -g node-inspector` firstly.
+nodeinspector=`which node-inspector`
+
+#check node-inspector
+if [ -z "$nodeinspector" ]; then
+    echo "To run this shell, you should run: 'sudo npm install -g node-inspector' firstly."
+    exit 1
+fi
+
+#check node-inspector is running
+flags=`ps -ef | grep node-inspector | wc -l`
+if [ $flags -eq 1 ]; then
+    echo "Please run 'node-inspector &' firstly."
+    exit 1
+fi
+
+gruntpath=`which grunt`
+echo "Grunt path: $gruntpath. Now you can debug Webserver. Be happy." 
+node --debug-brk `which grunt` --gruntfile Webserver.js
