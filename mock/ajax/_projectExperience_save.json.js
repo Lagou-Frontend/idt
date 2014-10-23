@@ -1,10 +1,6 @@
 //mock your ajax data
 
-delete require.cache[ require.resolve( './common' ) ];
-var mockCommon = require( './common' );
-var _ = require( 'underscore' );
-
-module.exports = _.extend( {
+module.exports = {
     "resubmitToken": null,
     "requestId": null,
     "code": 3,
@@ -61,4 +57,4 @@ module.exports = _.extend( {
         "refreshTime": "2014-10-23 16:03",
         "jsonIds": "{}"
     }
-}, mockCommon );
+};

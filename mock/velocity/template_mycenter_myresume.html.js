@@ -1,10 +1,6 @@
 //mock your velocity data
 
-delete require.cache[ require.resolve( './common' ) ];
-var mockCommon = require( './common' );
-var _ = require( 'underscore' );
-
-module.exports = _.extend( {
+module.exports = {
 
     projectYears: function () {
 
@@ -55,4 +51,4 @@ module.exports = _.extend( {
 
     }
 
-}, mockCommon );
+};

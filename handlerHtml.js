@@ -4,6 +4,7 @@
 
 var fs = require( 'fs' );
 var config = require( './config' );
+var _ = require( 'underscore' );
 
 var Engine = require( 'velocity' ).Engine;
 
@@ -15,10 +16,13 @@ var make = function( url2filename, fullpath, req, res ) {
         cache: false
     } );
 
+    var commonPath = config.mockVelocity + '/common';
     // delete cache
     delete require.cache[ require.resolve( fullpath ) ];
+    delete require.cache[ require.resolve( commonPath ) ];
 
-    res.end( engine.render( require( fullpath ) ) );
+    var context = _.extend( require( fullpath ), require( commonPath ) );
+    res.end( engine.render( context ) );
 
 };
 

@@ -4,15 +4,20 @@
 
 var fs = require( 'fs' );
 var config = require( './config' );
+var _ = require( 'underscore' );
 
 var Engine = require( 'velocity' ).Engine;
 
 var make = function( url2filename, fullpath, req, res ) {
     debugger;
 
+    var commonPath = config.mockAjax + '/common';
     // delete cache
     delete require.cache[ require.resolve( fullpath ) ];
-    res.end( JSON.stringify( require( fullpath ) ) );
+    delete require.cache[ require.resolve( commonPath ) ];
+
+    var context = _.extend( require( fullpath ), require( commonPath ) );
+    res.end( JSON.stringify( context ) );
 
 };
 
