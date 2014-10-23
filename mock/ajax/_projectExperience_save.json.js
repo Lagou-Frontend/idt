@@ -9,7 +9,7 @@ module.exports = {
     "content": {
         "resume": { },
         "projectExperience": {
-            "positionName": "web前端开发",
+            "positionName": "web前端开发哈哈哈",
             "createTime": 1414051386383,
             "projectName": "如何能够脱离后端开发",
             "startMonth": "",
@@ -29,7 +29,7 @@ module.exports = {
             "id": 785035
         },
         "projectExperiences": [ {
-            "positionName": "web前端开发",
+            "positionName": "web前端开发哈哈哈123",
             "createTime": 1414051386000,
             "projectName": "如何能够脱离后端开发",
             "startMonth": "",

@@ -6,9 +6,9 @@
 var fs = require( 'fs' );
 
 var config = require( './config' );
-var utils = require( './utils' );
-var handlerHtml = require( './handlerHtml' );
-var handlerAjax = require( './handlerAjax' );
+var utils = require( './common/utils' );
+var handlerHtml = require( './handlers/handlerHtml' );
+var handlerAjax = require( './handlers/handlerAjax' );
 
 /**
  * onCreateServer

@@ -38,8 +38,8 @@ module.exports = {
         refuseCount: 10,
         markCanInterviewCount: 9,
         haveNoticeInterCount: 5,
-        oneWord: '我是这样子的人，我是这样子的人我是这样子的人',
-        liveCity: '北京山顶洞人',
+        oneWord: '我是这样子的人，我是这样子的人我是这样子的人，你猜对了！',
+        liveCity: '周口店',
         resumeScore: 80,
         userIdentity: 2
 
