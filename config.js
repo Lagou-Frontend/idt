@@ -4,6 +4,8 @@
 
 // 指定项目源代码根目录【建议是绝对路径】
 var webContent = '/Users/mrguan/work/application/WebContent';
+// windows
+// var webContent = 'C:/xxx/xxx/xxx';
 
 module.exports = {
 

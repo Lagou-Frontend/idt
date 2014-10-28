@@ -14,6 +14,12 @@ Integration Develop Tool [ 集成开发工具 ]
 
 ##### 请确保已经安装好[nodejs](http://nodejs.org/)
 
+##### 请确保已经安装好 grunt-cli
+
+`(sudo) npm install -g grunt-cli`
+
+> 此步骤中，在windows下如果出现npm相关的错误，则可能是没有在`c:\Users\xxx\AppData\Roaming`下建立`npm`文件夹。
+
 ##### 进入合适的目录，执行(或者采用有界面版本的[github for windows](https://windows.github.com/))，检出项目：
 
 `git clone https://github.com/Lagou-Frontend/idt.git`
