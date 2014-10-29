@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 配置文件
  */
 
@@ -11,7 +11,7 @@ var webContent = '/Users/mrguan/work/application/WebContent';
 
 module.exports = {
 
-    // 项目中的webcontent
+    // 项目中的webcontent--jason
     webContent: webContent,
 
     // velocity的template模板根目录
