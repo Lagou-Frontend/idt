@@ -25,7 +25,7 @@ var create = function( url2filename, fullpath, req, res ) {
 
     fs.writeFile( fullpath, '//mock your ajax data', function( err ) {
         if ( err ) throw err;
-        res.end( 'Had create mock file for you, go to mock directory, write your mock data. ：）' );
+        res.end( 'Had create mock file for you, go to mock directory, write your mock data. :)' );
     } );
 
 };

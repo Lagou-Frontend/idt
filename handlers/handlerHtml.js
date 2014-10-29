@@ -30,7 +30,7 @@ var create = function( url2filename, fullpath, req, res ) {
 
     fs.writeFile( fullpath, '//mock your velocity data', function( err ) {
         if ( err ) throw err;
-        res.end( '已经自动生成 velocity 对应的 mockdata 文件，请写入数据：）' );
+        res.end( 'Had create mock file for you, go to mock directory, write your mock data. :)' );
     } );
 
 };
