@@ -16,7 +16,15 @@ var make = function( url2filename, fullpath, req, res ) {
     delete require.cache[ require.resolve( fullpath ) ];
     delete require.cache[ require.resolve( commonPath ) ];
 
-    var context = _.extend( require( fullpath ), require( commonPath ) );
+    var fullpathRequired = require( fullpath );
+    var commonPathRequired = require( commonPath );
+    // 判断是否为function
+    if ( typeof( fullpathRequired ) == 'function' ) {
+        // 带入请求对象，此function需要返回object
+        fullpathRequired = fullpathRequired.call( req );
+    }
+    var context = _.extend( fullpathRequired , commonPathRequired );
+    res.setHeader( 'Content-Type', 'text/html;charset=UTF-8' );
     res.end( JSON.stringify( context ) );
 
 };
