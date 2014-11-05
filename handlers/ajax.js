@@ -3,20 +3,18 @@
  */
 
 var fs = require( 'fs' );
+var path = require( 'path' );
+
 var config = require( '../config' );
+var utils = require( '../common/utils' );
 var _ = require( 'underscore' );
 
 var Engine = require( 'velocity' ).Engine;
 
 var make = function( url2filename, fullpath, req, res ) {
     debugger;
-    var engine = new Engine( {
-        root: config.templates,
-        template: config.webContent + req.url,
-        cache: false
-    } );
 
-    var commonPath = config.mockVelocity + '/common';
+    var commonPath = path.join( config.mockAjax, 'common' );
     // delete cache
     delete require.cache[ require.resolve( fullpath ) ];
     delete require.cache[ require.resolve( commonPath ) ];
@@ -30,13 +28,13 @@ var make = function( url2filename, fullpath, req, res ) {
     }
     var context = _.extend( fullpathRequired , commonPathRequired );
     res.setHeader( 'Content-Type', 'text/html;charset=UTF-8' );
-    res.end( engine.render( context ) );
+    res.end( JSON.stringify( context ) );
 
 };
 
 var create = function( url2filename, fullpath, req, res ) {
 
-    fs.writeFile( fullpath, '//mock your velocity data', function( err ) {
+    fs.writeFile( fullpath, '//mock your ajax data', function( err ) {
         if ( err ) throw err;
         res.end( 'Had create mock file for you, go to mock directory, write your mock data. :)' );
     } );
@@ -46,9 +44,12 @@ var create = function( url2filename, fullpath, req, res ) {
 exports.run = function( req, res, next ) {
 
     debugger;
-    // template_mycenter_myresume.html.js"
-    var url2filename = req.url.substring( 1 ).replace( /\//g, '_' ) + '.js';
-    var fullpath = config.mockVelocity + '/' + url2filename;
+    // 去掉 html 后面附加的参数: xxx.html?a=1
+    var url = utils.trimUrlQuery( req.url );
+    // /projectExperience/save.json to ...
+    // projectExperience_save.json.js
+    var url2filename = utils.handleMockFullname( url );
+    var fullpath = path.join( config.mockAjax, url2filename );
 
     var arg = [ url2filename, fullpath, req, res ];
     // 检查mock下面是否有对应的js文件存在，没有的话，自动生成

@@ -7,8 +7,10 @@ var fs = require( 'fs' );
 
 var config = require( './config' );
 var utils = require( './common/utils' );
-var handlerHtml = require( './handlers/handlerHtml' );
-var handlerAjax = require( './handlers/handlerAjax' );
+
+var handlerHtml = require( './handlers/html' );
+var handlerAjax = require( './handlers/ajax' );
+var handlerLess = require( './handlers/less' );
 
 /**
  * onCreateServer
@@ -77,6 +79,13 @@ var middleWares = function( connect, options, middlewares ) {
     middlewares.unshift( function( req, res, next ) {
         if ( utils.isAjax( req ) )
             return handlerAjax.run( req, res, next );
+        return next();
+    } );
+
+    // less
+    middlewares.unshift( function( req, res, next ) {
+        if ( utils.isLess( req ) )
+            return handlerLess.run( req, res, next );
         return next();
     } );
 

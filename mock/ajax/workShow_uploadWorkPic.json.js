@@ -26,4 +26,4 @@ var height = {
     "success": true
 };
 
-module.exports = width;
+module.exports = height;
