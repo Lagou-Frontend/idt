@@ -28,7 +28,7 @@ Integration Develop Tool [ 集成开发工具 ]
 
 `cd idt`
 
-`(sudo) npm install`
+`(sudo) ./install`
 
 来安装依赖库，完毕后可以开始使用。
 
