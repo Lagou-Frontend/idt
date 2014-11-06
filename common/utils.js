@@ -44,6 +44,12 @@ module.exports = {
 
     },
 
+    handleMockJsTail: function ( path ) {
+
+        return path + '.js';
+
+    },
+
     isHtml: function ( req ) {
 
         var url = req.url;

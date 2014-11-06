@@ -17,9 +17,10 @@ module.exports = {
     // velocity的template模板根目录
     templates: path.join( webContent, 'template' ),
 
-    // mock数据目录，这个需要在自己的目录中自行建立
-    mockVelocity: path.join( __dirname, 'mock/velocity' ),
-    mockAjax: path.join( __dirname, 'mock/ajax' ),
+    mockCommon: 'commonmock/common.js',
+    // mock数据目录，这个需要在自己的目录中自行建立，更新到项目的目录中去维护
+    mockVelocity: path.join( webContent, 'mobile/mock/velocity' ),
+    mockAjax: path.join( webContent, 'mobile/mock/ajax' ),
 
     // 源文件目录
     sourcePath: path.join( webContent, 'idttest' ),
