@@ -15,14 +15,16 @@ module.exports = {
     webContent: webContent,
 
     // velocity的template模板根目录
-    templates: path.join( webContent, '/template' ),
-
-    // 指定的build目录
-    buildPath: '',
+    templates: path.join( webContent, 'template' ),
 
     // mock数据目录，这个需要在自己的目录中自行建立
-    mockVelocity: path.join( __dirname, '/mock/velocity' ),
+    mockVelocity: path.join( __dirname, 'mock/velocity' ),
+    mockAjax: path.join( __dirname, 'mock/ajax' ),
 
-    mockAjax: path.join( __dirname, '/mock/ajax' )
+    // 源文件目录
+    sourcePath: path.join( webContent, 'idttest' ),
+
+    // 指定的build目录
+    buildPath: path.join( webContent, 'idttest/dist' )
 
 };
