@@ -1,6 +1,0 @@
-#!/bin/bash
-
-#make this runnable: sudo chmod +x ./build
-#exit: ctrl/comm + z
-
-grunt --gruntfile Buildtask.js

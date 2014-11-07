@@ -6,11 +6,13 @@ var fs = require( 'fs' );
 var path = require( 'path' );
 var mkdirp = require( 'mkdirp' );
 
-var config = require( '../config' );
-var utils = require( '../common/utils' );
+var idtconfig = require( '../../config' );
+var utils = require( '../../common/utils' );
 var _ = require( 'underscore' );
 
 var Engine = require( 'velocity' ).Engine;
+
+var config;
 
 var make = function( url2filename, fullpath, req, res ) {
     debugger;
@@ -60,9 +62,12 @@ var create = function( url2filename, fullpath, req, res ) {
 
 };
 
-exports.run = function( req, res, next ) {
+exports.run = function( req, res, next, importConfig ) {
 
     debugger;
+
+    config = importConfig;
+
     // 去掉 html 后面附加的参数: xxx.html?a=1
     var url = utils.trimUrlQuery( req.url );
     // /projectExperience/save.json to ...

@@ -5,10 +5,12 @@
 var fs = require( 'fs' );
 var path = require( 'path' );
 
-var config = require( '../config' );
-var utils = require( '../common/utils' );
+var idtconfig = require( '../../config' );
+var utils = require( '../../common/utils' );
 var _ = require( 'underscore' );
 var less = require( 'less' );
+
+var config;
 
 var answerForLess = function( data, req, res ) {
 
@@ -22,7 +24,9 @@ var answerForLess = function( data, req, res ) {
 
 };
 
-exports.run = function( req, res, next ) {
+exports.run = function( req, res, next, importConfig ) {
+
+    config = importConfig;
 
     // /less/resume.less?v=1.5.5.6_0825
     var url = utils.trimUrlQuery( req.url );

@@ -4,13 +4,16 @@
  */
 
 var fs = require( 'fs' );
+var path = require( 'path' );
 
-var config = require( './config' );
+var idtconfig = require( './config' );
 var utils = require( './common/utils' );
 
-var handlerHtml = require( './handlers/html' );
-var handlerAjax = require( './handlers/ajax' );
-var handlerLess = require( './handlers/less' );
+var handlerHtml = require( './handlers/ws/html' );
+var handlerAjax = require( './handlers/ws/ajax' );
+var handlerLess = require( './handlers/ws/less' );
+
+var config;
 
 /**
  * onCreateServer
@@ -71,21 +74,21 @@ var middleWares = function( connect, options, middlewares ) {
     // html
     middlewares.unshift( function( req, res, next ) {
         if ( utils.isHtml( req ) )
-            return handlerHtml.run( req, res, next );
+            return handlerHtml.run( req, res, next, config );
         return next();
     } );
 
     // ajax
     middlewares.unshift( function( req, res, next ) {
         if ( utils.isAjax( req ) )
-            return handlerAjax.run( req, res, next );
+            return handlerAjax.run( req, res, next, config );
         return next();
     } );
 
     // less
     middlewares.unshift( function( req, res, next ) {
         if ( utils.isLess( req ) )
-            return handlerLess.run( req, res, next );
+            return handlerLess.run( req, res, next, config );
         return next();
     } );
 
@@ -105,6 +108,9 @@ var middleWares = function( connect, options, middlewares ) {
 
 module.exports = function( grunt ) {
 
+    var webconfigpath = grunt.option( 'configpath' );
+    config = require( webconfigpath );
+
     // Project configuration.
     grunt.initConfig( {
 
@@ -118,7 +124,7 @@ module.exports = function( grunt ) {
             // base server
             baseServer: {
                 options: {
-                    port: 8000,
+                    port: config.webPort,
                     // 可访问性
                     hostname: '*',
                     // 根目录
