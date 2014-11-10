@@ -8,32 +8,39 @@ var fs = require( 'fs' );
 var program = require( 'commander' );
 var packageinfo = require( '../package.json' );
 
-var clis = require( '../handlers/cli/main' );
+var clis = require( '../handler/cli/main' );
 
 program.version( packageinfo.version );
 
 program.option( '-c, --config [config]', 
-    'specify your `idt-config.js`, `idt-config.js` by default.', 'idt-config.js' );
+    'specify your `idt-config.js`, `idt-config.js` by default', 'idt-config.js' );
 
 program
     .command( 'ws <action>' )
-    .description( 'run webserver: `idt ws start`. <action> now only has `start` option.' )
+    .description( 'run webserver: `idt ws start`. <action> now only has `start` option' )
     .action( function ( action ) {
         clis.ws.call( program, action );
     } );
 
 program
     .command( 'build' )
-    .description( 'build your project.' )
+    .description( 'build your project' )
     .action( function () {
         clis.build.call( program );
     } );
 
 program
     .command( 'ceconfig' )
-    .description( 'create `idt-config` for your project.' )
+    .description( 'create `idt-config` for your project' )
     .action( function () {
         clis.ceconfig.call( program );
+    } );
+
+program
+    .command( 'install' )
+    .description( 'install `grunt-cli` and `edp` globally' )
+    .action( function () {
+        clis.install.call( program );
     } );
 
 program.parse( process.argv );

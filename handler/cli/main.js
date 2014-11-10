@@ -8,6 +8,8 @@ module.exports = {
 
     build: require( './build' ),
 
-    ceconfig: require( './ceconfig' )
+    ceconfig: require( './ceconfig' ),
+
+    install: require( './install' )
 
 };

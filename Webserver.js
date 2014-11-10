@@ -9,9 +9,9 @@ var path = require( 'path' );
 var idtconfig = require( './config' );
 var utils = require( './common/utils' );
 
-var handlerHtml = require( './handlers/ws/html' );
-var handlerAjax = require( './handlers/ws/ajax' );
-var handlerLess = require( './handlers/ws/less' );
+var handlerHtml = require( './handler/ws/html' );
+var handlerAjax = require( './handler/ws/ajax' );
+var handlerLess = require( './handler/ws/less' );
 
 var config;
 
@@ -114,7 +114,7 @@ module.exports = function( grunt ) {
     // Project configuration.
     grunt.initConfig( {
 
-        pkg: grunt.file.readJSON( 'package.json' ),
+        pkg: grunt.file.readJSON( './package.json' ),
 
         /**
          * 服务器配置

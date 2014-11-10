@@ -34,7 +34,13 @@ var checkUrlTail = function ( url, type ) {
 
 };
 
+var errorMaps = {
+    0: 'ok'
+};
+
 module.exports = {
+
+    errorMaps: errorMaps,
 
     trimUrlQuery: trimUrlQuery,
 

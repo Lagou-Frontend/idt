@@ -5,6 +5,7 @@
 var fs = require( 'fs' );
 var path = require( 'path' );
 var mkdirp = require( 'mkdirp' );
+var colors = require( 'colors' );
 
 var idtconfig = require( '../../config' );
 var utils = require( '../../common/utils' );
@@ -42,6 +43,10 @@ var make = function( url2filename, fullpath, req, res ) {
             fullpathRequired = fullpathRequired.call( req );
         }
         var context = _.extend( fullpathRequired, commonPathRequired );
+
+        // 输出ajax请求
+        console.log( req.url.underline.green );
+
         res.setHeader( 'Content-Type', 'text/html;charset=UTF-8' );
         res.end( JSON.stringify( context ) );
 

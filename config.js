@@ -6,6 +6,6 @@ module.exports = {
 
     configName: 'idt-config.js',
 
-    wsName: 'Webserver.js'
+    wsName: 'webserver.js'
 
 };
