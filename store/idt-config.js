@@ -24,6 +24,7 @@ module.exports = {
     // velocity的template模板根目录
     templates: path.join( webContent, secondary, 'tpl' ),
 
+    // 【无需修改】
     mockCommon: 'commonmock/common.js',
     // mock数据目录，这个需要在自己的目录中自行建立，更新到项目的目录中去维护
     mockVelocity: path.join( webContent, secondary, 'mock/velocity' ),

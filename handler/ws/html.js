@@ -10,6 +10,8 @@ var idtconfig = require( '../../config' );
 var utils = require( '../../common/utils' );
 var _ = require( 'underscore' );
 
+var shell = require( 'shelljs' );
+
 var Engine = require( 'velocity' ).Engine;
 
 var config;
@@ -33,11 +35,20 @@ var make = function( url2filename, fullpath, req, res ) {
     var commonPathRequired = {};
     fs.exists( commonPath, function( exists ) {
         if ( exists ) {
-            delete require.cache[ require.resolve( commonPath ) ];
-            commonPathRequired = require( commonPath );
+            commonAndAnswer();
         }
-        answer();
+        else {
+            createCommonMock( commonAndAnswer );
+        }
     } );
+
+    var commonAndAnswer = function () {
+
+        delete require.cache[ require.resolve( commonPath ) ];
+        commonPathRequired = require( commonPath );
+        answer();
+
+    };
 
     var answer = function() {
 
@@ -51,6 +62,33 @@ var make = function( url2filename, fullpath, req, res ) {
         res.end( engine.render( context ) );
 
     };
+
+};
+
+var createCommonMock = function ( callback ) {
+
+    // 需要新建立velocity的commonmock/common.js
+    var source = path.resolve( 
+        path.join( __dirname, '../../store', 'commonmock' ) );
+    var target = path.resolve( config.mockVelocity );
+
+    var comm = [
+
+        'cp -rf ',
+        source, ' ',
+        target
+
+    ].join( '' );
+
+    console.log( 'running \n' + comm );
+
+    shell.exec( comm, { async: false }, function( code, output ) {
+        console.log( 'Exit code:', utils.errorMaps[ code ] );
+        // console.log( 'Program output:', output );
+
+        callback();
+
+    } );
 
 };
 
