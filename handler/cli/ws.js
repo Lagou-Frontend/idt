@@ -4,8 +4,11 @@
 
 var shell = require( 'shelljs' );
 var path = require( 'path' );
+var fs = require( 'fs' );
 var dir = process.cwd();
 var idtconfig = require( '../../config' );
+
+var utils = require( '../../common/utils' );
 
 var configFile;
 var config;
@@ -27,7 +30,7 @@ var startWs = function() {
 
     ].join( '' );
 
-    console.log( 'running \n' + comm );
+    utils.clog.cmd( 'running \n' + comm );
 
     shell.exec( comm, function( code, output ) {
         console.log( 'Exit code:', code );
@@ -36,17 +39,25 @@ var startWs = function() {
 
 };
 
+var ceIdtConfig = function () {
+
+    require( './ceconfig' )( startWs );
+
+};
+
 module.exports = function( action ) {
 
     var program = this;
     configFile = program.config;
-    console.log( 'running idt ws(webserver) %s, use ' + configFile, action );
+    utils.clog.cmd( 'running idt ws(webserver) %s, use ' + configFile, action );
 
     switch ( action ) {
 
         // start the webserver
         case 'start':
-            startWs();
+            fs.exists( path.join( dir, configFile ), function( exists ) {
+                exists ? startWs() : ceIdtConfig();
+            } );
             break;
 
         default:

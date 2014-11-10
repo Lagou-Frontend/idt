@@ -10,7 +10,7 @@ var utils = require( '../../common/utils' );
 
 module.exports = function() {
     var program = this;
-    console.log( 'running idt install, use ' + program.config );
+    utils.clog.cmd( 'running idt install, use ' + program.config );
 
     // 检查是否安装过
     var hasGruntInstalled = shell.exec( 'which grunt', { async: false } );
@@ -29,7 +29,7 @@ module.exports = function() {
 
     ].join( '' );
 
-    console.log( 'running \n' + comm );
+    utils.clog.cmd( 'running \n' + comm );
 
     shell.exec( comm, function( code, output ) {
         console.log( 'Exit code:', utils.errorMaps[ code ] );

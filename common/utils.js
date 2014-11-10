@@ -2,18 +2,19 @@
  * 工具
  */
 
+var colors = require( 'colors/safe' );
+
 /**
  * 去掉查询字符串
- * 
+ *
  * @param  {string} url [description]
  * @return {boolean}     [description]
  */
-var trimUrlQuery = function ( url ) {
+var trimUrlQuery = function( url ) {
 
-    if ( ~ url.indexOf( '?' ) ) {
+    if ( ~url.indexOf( '?' ) ) {
         return url.substring( 0, url.lastIndexOf( '?' ) )
-    }
-    else {
+    } else {
         return url;
     }
 
@@ -21,12 +22,12 @@ var trimUrlQuery = function ( url ) {
 
 /**
  * 简易地检查url类型
- * 
+ *
  * @param  {string} url  '/a/b/c.xxx'
  * @param  {string} type 'html'/'less'
  * @return {boolean}
  */
-var checkUrlTail = function ( url, type ) {
+var checkUrlTail = function( url, type ) {
 
     url = trimUrlQuery( url );
 
@@ -44,19 +45,28 @@ module.exports = {
 
     trimUrlQuery: trimUrlQuery,
 
-    handleMockFullname: function ( url ) {
+    clog: {
+
+        cmd: function ( msg ) {
+            console.log( 
+                colors.bgGreen.blue.underline( msg ) );
+        }
+
+    },
+
+    handleMockFullname: function( url ) {
 
         return url.substring( 1 ).replace( /\//g, '_' ) + '.js';
 
     },
 
-    handleMockJsTail: function ( path ) {
+    handleMockJsTail: function( path ) {
 
         return path + '.js';
 
     },
 
-    isHtml: function ( req ) {
+    isHtml: function( req ) {
 
         var url = req.url;
 
@@ -64,20 +74,18 @@ module.exports = {
 
     },
 
-    isAjax: function ( req ) {
+    isAjax: function( req ) {
 
         var url = req.url;
 
-        if ( req.headers[ 'x-requested-with' ]
-            && ( req.headers[ 'x-requested-with' ] == 'XMLHttpRequest' )
-            && ( !checkUrlTail( url, 'js' ) ) )
+        if ( req.headers[ 'x-requested-with' ] && ( req.headers[ 'x-requested-with' ] == 'XMLHttpRequest' ) && ( !checkUrlTail( url, 'js' ) ) )
             return 1;
 
         return checkUrlTail( url, 'json' );
 
     },
 
-    isLess: function ( req ) {
+    isLess: function( req ) {
 
         var url = req.url;
 

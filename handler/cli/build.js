@@ -2,7 +2,9 @@
  * build
  */
 
+var utils = require( '../../common/utils' );
+
 module.exports = function() {
     var program = this;
-    console.log( 'running idt build, use ' + program.config );
+    utils.clog.cmd( 'running idt build, use ' + program.config );
 };
