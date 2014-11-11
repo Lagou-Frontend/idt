@@ -80,6 +80,8 @@ var createCommonMock = function ( callback ) {
 
     ].join( '' );
 
+    comm = utils.handleWinCp( comm );
+
     utils.clog.cmd( 'running ' + comm );
 
     shell.exec( comm, { async: false }, function( code, output ) {

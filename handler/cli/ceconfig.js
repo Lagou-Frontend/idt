@@ -23,6 +23,8 @@ module.exports = function( callback ) {
 
     ].join( '' );
 
+    comm = utils.handleWinCp( comm );
+
     utils.clog.cmd( 'running ' + comm );
 
     shell.exec( comm, function( code, output ) {

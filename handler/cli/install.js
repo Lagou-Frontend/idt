@@ -8,16 +8,23 @@ var dir = process.cwd();
 var idtconfig = require( '../../config' );
 var utils = require( '../../common/utils' );
 
+var os = require( 'os' );
+
 module.exports = function() {
     var program = this;
     utils.clog.cmd( 'running idt install, use ' + program.config );
 
-    // 检查是否安装过
-    var hasGruntInstalled = shell.exec( 'which grunt', { async: false } );
-    var hasEdpInstalled = shell.exec( 'which edp', { async: false } );
-    if ( !!hasGruntInstalled.output && !!hasEdpInstalled.output ) {
-        console.log( 'you have installed `grunt` & `edp`.' );
-        return;
+    utils.clog.cmd( 'your platform: ' + os.platform() );
+
+    // windows下，不进行校验了
+    if ( ! utils.isWin32() ) {
+        // 检查是否安装过
+        var hasGruntInstalled = shell.exec( 'which grunt', { async: false } );
+        var hasEdpInstalled = shell.exec( 'which edp', { async: false } );
+        if ( !!hasGruntInstalled.output && !!hasEdpInstalled.output ) {
+            console.log( 'you have installed `grunt` & `edp`.' );
+            return;
+        }
     }
 
     // 全局安装这些依赖

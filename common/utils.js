@@ -6,6 +6,8 @@ var fs = require( 'fs' );
 var path = require( 'path' );
 var colors = require( 'colors/safe' );
 
+var os = require( 'os' );
+
 /**
  * 去掉查询字符串
  *
@@ -37,6 +39,12 @@ var checkUrlTail = function( url, type ) {
 
 };
 
+var isWin32 = function () {
+
+    return ~os.platform().indexOf( 'win32' );
+
+};
+
 var errorMaps = {
     0: 'ok'
 };
@@ -49,25 +57,36 @@ module.exports = {
 
     clog: {
 
-        cmd: function ( msg ) {
-            console.log( 
+        cmd: function( msg ) {
+            console.log(
                 colors.bgGreen.blue.underline( msg ) );
         },
 
-        error: function ( msg ) {
-            console.log( 
+        error: function( msg ) {
+            console.log(
                 colors.bgGreen.red.underline( msg ) );
         }
 
     },
 
-    getPathDir: function ( pathl ) {
+    isWin32: isWin32,
+
+    handleWinCp: function( comm ) {
+
+        if ( ! isWin32() )
+            return comm;
+        
+        return comm
+            .replace( /([a-z])\:\\/g, "\\$1\\" )
+            .replace( /\\/g, '/' );
+
+    },
+
+    getPathDir: function( pathl ) {
 
         var targetPath;
         var stats = fs.statSync( pathl );
-        stats.isDirectory()
-            ? ( targetPath = pathl )
-            : ( targetPath = path.dirname( pathl ) );
+        stats.isDirectory() ? ( targetPath = pathl ) : ( targetPath = path.dirname( pathl ) );
 
         return targetPath;
 

@@ -183,6 +183,8 @@ var runCopy = function( fileName ) {
 
     ].join( '' );
 
+    comm = utils.handleWinCp( comm );
+
     utils.clog.cmd( 'running ' + comm );
 
     shell.exec( comm, {
@@ -204,6 +206,8 @@ var copyAssets = function() {
         path.join( userConfig.buildPath )
 
     ].join( '' );
+
+    comm = utils.handleWinCp( comm );
 
     utils.clog.cmd( 'running ' + comm );
 
