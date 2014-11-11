@@ -80,7 +80,7 @@ var createCommonMock = function ( callback ) {
 
     ].join( '' );
 
-    utils.clog.cmd( 'running \n' + comm );
+    utils.clog.cmd( 'running ' + comm );
 
     shell.exec( comm, { async: false }, function( code, output ) {
         console.log( 'Exit code:', utils.errorMaps[ code ] );

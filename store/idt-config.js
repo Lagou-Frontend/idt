@@ -9,8 +9,8 @@ var webContent = __dirname;
 // 二级目录设置【可选】
 var secondary = '';
 
-var moduleEntries = 'html,htm,phtml,tpl,vm,js';
-var pageEntries = 'html,htm,phtml,tpl,vm';
+// build子目录时可能需要用到【不要修改】
+var buildLevel = '';
 
 module.exports = {
 
@@ -22,7 +22,7 @@ module.exports = {
     webContent: webContent,
 
     // velocity的template模板根目录
-    templates: path.join( webContent, secondary, 'tpl' ),
+    templates: path.join( webContent, secondary, 'template' ),
 
     // 【无需修改】
     mockCommon: 'commonmock/common.js',
@@ -30,20 +30,28 @@ module.exports = {
     mockVelocity: path.join( webContent, secondary, 'mock/velocity' ),
     mockAjax: path.join( webContent, secondary, 'mock/ajax' ),
 
+    // 以下三项最后的buildLevel不要修改
+    // 需要build入的目录
+    buildPath: path.resolve( __dirname, '../', 'webcontentRd', buildLevel ),
     //---以下为edp相关配置---//
-    input: webContent,
-    output: path.resolve( __dirname, 'output' ),
+    input: path.resolve( webContent, buildLevel ),
+    // 【无需修改】
+    output: path.resolve( __dirname, '.output', buildLevel ),
 
     getProcessors: function() {
         var lessProcessor = new LessCompiler();
-        var cssProcessor = new CssCompressor();
+        var cssProcessor = new CssCompressor( {
+            compressOptions: { keepBreaks: false }
+        } );
         var moduleProcessor = new ModuleCompiler();
         var jsProcessor = new JsCompressor();
         var pathMapperProcessor = new PathMapper();
         var addCopyright = new AddCopyright();
 
         return {
+            // 默认的build不需要压缩，以便开发（联调）的时候，利于调试
             'default': [ lessProcessor, moduleProcessor, pathMapperProcessor ],
+            // 在最后联调成功以后，要进行release，会进行代码压缩等处理
             'release': [
                 lessProcessor, cssProcessor, moduleProcessor,
                 jsProcessor, pathMapperProcessor, addCopyright
@@ -75,8 +83,19 @@ module.exports = {
         '.DS_Store',
         '*.tmp',
         '*.bak',
-        '*.swp'
+        '*.swp',
+        'copyright.txt',
+        'package.json',
+        'README.md',
+        // 移动端的mobile现在还在WebContent中，要排除掉
+        'mobile',
+        'idt-config.js',
+        // pagefooter.html为建立下载模板，build会出错，故排除，但是需要单独处理
+        'pagefooter.html'
     ],
+
+    // 和上面的保持一致就可以，idt单独对齐进行copy
+    idtCopyList: [ 'pagefooter.html' ],
 
     // do not modify
     injectProcessor: function( processors ) {

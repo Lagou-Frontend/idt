@@ -2,6 +2,8 @@
  * 工具
  */
 
+var fs = require( 'fs' );
+var path = require( 'path' );
 var colors = require( 'colors/safe' );
 
 /**
@@ -50,7 +52,24 @@ module.exports = {
         cmd: function ( msg ) {
             console.log( 
                 colors.bgGreen.blue.underline( msg ) );
+        },
+
+        error: function ( msg ) {
+            console.log( 
+                colors.bgGreen.red.underline( msg ) );
         }
+
+    },
+
+    getPathDir: function ( pathl ) {
+
+        var targetPath;
+        var stats = fs.statSync( pathl );
+        stats.isDirectory()
+            ? ( targetPath = pathl )
+            : ( targetPath = path.dirname( pathl ) );
+
+        return targetPath;
 
     },
 

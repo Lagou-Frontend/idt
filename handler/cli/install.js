@@ -29,7 +29,7 @@ module.exports = function() {
 
     ].join( '' );
 
-    utils.clog.cmd( 'running \n' + comm );
+    utils.clog.cmd( 'running ' + comm );
 
     shell.exec( comm, function( code, output ) {
         console.log( 'Exit code:', utils.errorMaps[ code ] );

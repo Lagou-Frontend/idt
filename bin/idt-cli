@@ -23,10 +23,11 @@ program
     } );
 
 program
-    .command( 'build' )
-    .description( 'build your project' )
-    .action( function () {
-        clis.build.call( program );
+    .command( 'build [dirs...]' )
+    .option( '-r, --release', 'release you project' )
+    .description( 'build your project, dir is optional' )
+    .action( function ( dirs, options ) {
+        clis.build.call( program, dirs, options.release );
     } );
 
 program
