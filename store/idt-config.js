@@ -2,6 +2,24 @@
  * idt配置文件
  */
 
+/**
+ * module.conf 的样例示范，在根目录build，需要在根目录建立一个module.conf文件
+ * 它是用来配置module模块，但是现在整体还没有用到，所以建立一个如下内容的文件即可
+ */
+
+// {
+//     "baseUrl": "./",
+//     "packages": [ ],
+//     "combine": { }
+// }
+
+/**
+ * 在根目录构建，可以新建一个`copyright.txt`文件，来给所有build出来的文件，添加统一的版权声明
+ * 例如： 
+ */
+
+/*! 2014 Lagou Inc. All Rights Reserved */
+
 var path = require( 'path' );
 
 // 当前文件夹路径【无需修改】
@@ -32,7 +50,8 @@ module.exports = {
 
     // 以下三项最后的buildLevel不要修改
     // 需要build入的目录
-    buildPath: path.resolve( __dirname, '../', 'webcontentRd', buildLevel ),
+    buildPath: path.resolve( 
+        'path/to/your/webContent', buildLevel ),
     //---以下为edp相关配置---//
     input: path.resolve( webContent, buildLevel ),
     // 【无需修改】
@@ -91,7 +110,8 @@ module.exports = {
         'mobile',
         'idt-config.js',
         // pagefooter.html为建立下载模板，build会出错，故排除，但是需要单独处理
-        'pagefooter.html'
+        'pagefooter.html',
+        'WEB-INF'
     ],
 
     // 和上面的保持一致就可以，idt单独对齐进行copy

@@ -65,4 +65,16 @@ Integration Develop Tool [ 集成开发工具 ]
 
 	idt build
 	
-待续。
+现有功能，支持在`WebContent`资源根目录下的整体build，在build之前，根目录下，需要已经生成`idt-config.js`和`module.conf`文件。
+
+`idt-config.js`文件可以通过`idt ws start`来自动生成，`module.conf`则需要仔细阅读生成的`idt-config.js`文件中的说明及其配置。
+
+`idt build`默认是不压缩的build过程，这是为了便于开发、联调。发布线上之前需要带上`--release`参数：
+
+	idt build --release
+	
+`idt build`同样可以针对某个子目录进行build：
+
+	idt build template/example admin/js --release
+	
+> 配置文件`idt-config.js`一定要仔细查看及配置
