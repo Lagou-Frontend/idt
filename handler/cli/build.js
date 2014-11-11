@@ -129,6 +129,16 @@ var compressHtmlForItem = function() {
             'java -jar ',
             path.join( __dirname, '../../', idtconfig.htmlMin ),
             ' ',
+
+            '--remove-style-attr ',
+            '--remove-link-attr ',
+            '--remove-script-attr ',
+            // '--compress-js ',
+            '--compress-css ',
+            // '--nomunge ',
+            // '--js-compressor closure ',
+            // '--closure-opt-level advanced ',
+
             '--type html --recursive -o ',
             path.join( userConfig.buildPath, item, '/' ),
             ' ',
@@ -243,6 +253,16 @@ var compressHtml = function() {
         'java -jar ',
         path.join( __dirname, '../../', idtconfig.htmlMin ),
         ' ',
+
+        '--remove-style-attr ',
+        '--remove-link-attr ',
+        '--remove-script-attr ',
+        // '--compress-js ',
+        '--compress-css ',
+        // '--nomunge ',
+        // '--js-compressor closure ',
+        // '--closure-opt-level advanced ',
+
         '--type html --recursive -o ',
         path.join( userConfig.buildPath, path.basename( userConfig.templates ) ),
         ' ',
