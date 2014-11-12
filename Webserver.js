@@ -6,12 +6,15 @@
 var fs = require( 'fs' );
 var path = require( 'path' );
 
+var requester = require( 'request' );
+
 var idtconfig = require( './config' );
 var utils = require( './common/utils' );
 
 var handlerHtml = require( './handler/ws/html' );
 var handlerAjax = require( './handler/ws/ajax' );
 var handlerLess = require( './handler/ws/less' );
+var handlerRProxy = require( './handler/ws/reverse' );
 
 var config;
 
@@ -106,6 +109,13 @@ var middleWares = function( connect, options, middlewares ) {
 
 };
 
+var reverseProxyLayer = function( req, res, next ) {
+    var matcherKey;
+    if ( matcherKey = utils.matchRProxy( req, config.reverseProxyMap ) )
+        return handlerRProxy.run( req, res, next, config, matcherKey );
+    return next();
+};
+
 module.exports = function( grunt ) {
 
     var webconfigpath = grunt.option( 'configpath' );
@@ -133,7 +143,21 @@ module.exports = function( grunt ) {
                     keepalive: true,
                     onCreateServer: onCreateServer,
                     // 中间层
-                    middleware: middleWares
+                    middleware: function ( connect, options, middlewares ) {
+                        // 系统默认中间层
+                        var sysMids = middleWares( connect, options, middlewares );
+                        // 用户可能也会有自定义的过滤器
+                        var concatedMids = config.middlewares 
+                            && config.middlewares( connect, options, sysMids, 
+                                {
+                                    requester: requester,
+                                    defaulthostp: 'http://localhost:' + config.webPort
+                                } )
+                            || sysMids;
+                        // 反向代理的中间层要放到第一个
+                        concatedMids.unshift( reverseProxyLayer );
+                        return concatedMids;
+                    }
                 }
             }
         }

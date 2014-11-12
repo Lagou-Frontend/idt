@@ -15,7 +15,7 @@
 
 /**
  * 在根目录构建，可以新建一个`copyright.txt`文件，来给所有build出来的文件，添加统一的版权声明
- * 例如： 
+ * 例如：
  */
 
 /*! 2014 Lagou Inc. All Rights Reserved */
@@ -40,7 +40,7 @@ module.exports = {
     webContent: webContent,
 
     // velocity的template模板根目录
-    templates: path.join( webContent, secondary, 'template' ),
+    templates: path.join( webContent, secondary, 'tpl' ),
 
     // 【无需修改】
     mockCommon: 'commonmock/common.js',
@@ -48,10 +48,54 @@ module.exports = {
     mockVelocity: path.join( webContent, secondary, 'mock/velocity' ),
     mockAjax: path.join( webContent, secondary, 'mock/ajax' ),
 
+    // 反向代理配置
+    reverseProxyMap: {
+
+        // 键名可以随意
+        mobile: {
+            pattern: /^\/mobile\//,
+            replace: '\/'
+        }
+
+    },
+    /**
+     * web server 中间层
+     * requester 是一个请求器，可以用来做反向代理等等
+     * 
+     * @param  {[type]} connect     [description]
+     * @param  {[type]} options     [description]
+     * @param  {Array} middlewares 系统中间层
+     * @param  {Object} rtool      { requester: 请求器, defaulthostp: '默认的本地域名' }
+     * @return {[type]}             [description]
+     */
+    middlewares: function( connect, options, middlewares, rtool ) {
+
+        // inject a custom middleware into the array of default middlewares
+        // html example
+        // middlewares.unshift( function( req, res, next ) {
+        //     if ( utils.isHtml( req ) )
+        //         return handlerHtml.run( req, res, next, config );
+        //     return next();
+        // } );
+
+        middlewares.unshift( function( req, res, next ) {
+            
+            console.log( 'user middleware, request url: ' + req.url );
+
+            return next();
+        } );
+
+        // console.log( rtool.requester, rtool.defaulthostp );
+
+        return middlewares;
+
+    },
+
     // 以下三项最后的buildLevel不要修改
     // 需要build入的目录
-    buildPath: path.resolve( 
-        'path/to/your/webContent', buildLevel ),
+    buildPath: path.resolve(
+        'path/to/your/webcontent',
+        buildLevel ),
     //---以下为edp相关配置---//
     input: path.resolve( webContent, buildLevel ),
     // 【无需修改】
@@ -60,7 +104,9 @@ module.exports = {
     getProcessors: function() {
         var lessProcessor = new LessCompiler();
         var cssProcessor = new CssCompressor( {
-            compressOptions: { keepBreaks: false }
+            compressOptions: {
+                keepBreaks: false
+            }
         } );
         var moduleProcessor = new ModuleCompiler();
         var jsProcessor = new JsCompressor();
@@ -115,7 +161,7 @@ module.exports = {
     ],
 
     // 和上面的保持一致就可以，idt单独对齐进行copy
-    idtCopyList: [ 'pagefooter.html' ],
+    idtCopyList: [],
 
     // do not modify
     injectProcessor: function( processors ) {

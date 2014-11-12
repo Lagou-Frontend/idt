@@ -4,7 +4,9 @@
 
 var fs = require( 'fs' );
 var path = require( 'path' );
-var colors = require( 'colors/safe' );
+var colors = require( 'colors' );
+
+var _ = require( 'underscore' );
 
 var os = require( 'os' );
 
@@ -65,6 +67,11 @@ module.exports = {
         error: function( msg ) {
             console.log(
                 colors.bgGreen.red.underline( msg ) );
+        },
+
+        tip: function ( msg ) {
+            console.log(
+                colors.bgYellow.magenta( msg ) );
         }
 
     },
@@ -79,6 +86,21 @@ module.exports = {
         return comm
             .replace( /([a-z])\:\\/g, "\\$1\\" )
             .replace( /\\/g, '/' );
+
+    },
+
+    matchRProxy: function ( req, reverseProxyMap ) {
+
+        var match = false;
+
+        _.each( reverseProxyMap, function ( value, key ) {
+            if ( value.pattern.test( req.url ) ) {
+                match = key;
+                return false;
+            }
+        } );
+
+        return match;
 
     },
 
