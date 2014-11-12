@@ -33,7 +33,7 @@ var startWs = function() {
     utils.clog.cmd( 'running ' + comm );
 
     shell.exec( comm, function( code, output ) {
-        console.log( 'Exit code:', utils.errorMaps[ code ] );
+        utils.clog.nor( 'Exit code: ' + utils.errorMaps[ code ] );
         // console.log( 'Program output:', output );
     } );
 

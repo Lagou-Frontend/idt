@@ -32,11 +32,15 @@ exports.run = function( req, res, next, importConfig, matcherKey ) {
 
         var msg = 'reverse proxy: ' + req.url + ' to ' + targetUrl;
 
-        console.log( msg.underline.bgYellow.magenta );
+        utils.clog.tip( msg );
 
         if ( !error && response.statusCode == 200 ) {
             res.end( body );
+            return;
         }
+
+        // res.end( '' );
+        utils.clog.error( 'reverse proxy about \'' + targetUrl + '\'' );
 
     } );
 

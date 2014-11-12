@@ -12,7 +12,7 @@ module.exports = function( callback ) {
     var program = this;
     var dir = process.cwd();
 
-    console.log( 'create idt-config.js for your project, in dir: ' + dir );
+    utils.clog.nor( 'create idt-config.js for your project, in dir: ' + dir );
 
     var comm = [
 
@@ -28,7 +28,7 @@ module.exports = function( callback ) {
     utils.clog.cmd( 'running ' + comm );
 
     shell.exec( comm, function( code, output ) {
-        console.log( 'Exit code:', utils.errorMaps[ code ] );
+        utils.clog.nor( 'Exit code: ' + utils.errorMaps[ code ] );
         // console.log( 'Program output:', output );
         callback && callback();
     } );

@@ -45,7 +45,7 @@ var make = function( url2filename, fullpath, req, res ) {
         var context = _.extend( fullpathRequired, commonPathRequired );
 
         // 输出ajax请求
-        console.log( ( 'ajax: ' + req.url ).underline.green );
+        utils.clog.tip( 'ajax: ' + req.url );
 
         res.setHeader( 'Content-Type', 'text/html;charset=UTF-8' );
         res.end( JSON.stringify( context ) );

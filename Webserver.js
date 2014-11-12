@@ -27,8 +27,8 @@ var config;
 var onCreateServer = function( server, connect, options ) {
 
     debugger;
-    console.log( 'WebServer Pid: ' + process.pid );
-    console.log( 'Running on port: ' + options.port );
+    utils.clog.nor( 'WebServer Pid: ' + process.pid );
+    utils.clog.nor( 'Running on port: ' + options.port );
 
     // socket 支持
     var io = require( 'socket.io' ).listen( server );

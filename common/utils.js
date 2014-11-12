@@ -60,18 +60,27 @@ module.exports = {
     clog: {
 
         cmd: function( msg ) {
+            msg = 'IDT -> cmd: ' + msg;
             console.log(
-                colors.bgGreen.blue.underline( msg ) );
+                msg.bgGreen.blue );
         },
 
         error: function( msg ) {
+            msg = 'IDT -> error: ' + msg;
             console.log(
-                colors.bgGreen.red.underline( msg ) );
+                msg.bgGreen.red.underline );
         },
 
         tip: function ( msg ) {
+            msg = 'IDT -> tip: ' + msg;
             console.log(
-                colors.bgYellow.magenta( msg ) );
+                msg.bgYellow.magenta );
+        },
+
+        nor: function ( msg ) {
+            msg = 'IDT -> nor: ' + msg;
+            console.log(
+                msg.yellow );
         }
 
     },

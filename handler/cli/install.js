@@ -22,7 +22,7 @@ module.exports = function() {
         var hasGruntInstalled = shell.exec( 'which grunt', { async: false } );
         var hasEdpInstalled = shell.exec( 'which edp', { async: false } );
         if ( !!hasGruntInstalled.output && !!hasEdpInstalled.output ) {
-            console.log( 'you have installed `grunt` & `edp`.' );
+            utils.clog.tip( 'you have installed `grunt` & `edp`.' );
             return;
         }
     }
@@ -39,7 +39,7 @@ module.exports = function() {
     utils.clog.cmd( 'running ' + comm );
 
     shell.exec( comm, function( code, output ) {
-        console.log( 'Exit code:', utils.errorMaps[ code ] );
+        utils.clog.nor( 'Exit code: ' + utils.errorMaps[ code ] );
         // console.log( 'Program output:', output );
     } );
 
