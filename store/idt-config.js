@@ -113,6 +113,15 @@ module.exports = {
         var pathMapperProcessor = new PathMapper();
         var addCopyright = new AddCopyright();
 
+        // 字符串替换
+        var stringReplace = new StringReplace( {
+            include: [ '*.html' ],
+            exclude: [ '*.css', '*.less', '*.js', '*.md' ],
+            replacements: [ 
+                { from: /\#parse\( \"/g, to: '#parse( "mobile/' }
+            ]
+        } );
+
         return {
             // 默认的build不需要压缩，以便开发（联调）的时候，利于调试
             'default': [ lessProcessor, moduleProcessor, pathMapperProcessor ],
