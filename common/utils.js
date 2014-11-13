@@ -9,6 +9,7 @@ var colors = require( 'colors' );
 var _ = require( 'underscore' );
 
 var os = require( 'os' );
+var mimetype = require( './mimetype' );
 
 /**
  * 去掉查询字符串
@@ -77,6 +78,12 @@ module.exports = {
                 msg.bgYellow.magenta );
         },
 
+        tell: function ( msg ) {
+            msg = 'IDT -> tell: ' + msg;
+            console.log(
+                msg.bgWhite.green );
+        },
+
         nor: function ( msg ) {
             msg = 'IDT -> nor: ' + msg;
             console.log(
@@ -86,6 +93,12 @@ module.exports = {
     },
 
     isWin32: isWin32,
+
+    judgeImage: function ( response ) {
+
+        return mimetype.image[ response.headers[ 'content-type' ] ];
+
+    },
 
     handleWinCp: function( comm ) {
 

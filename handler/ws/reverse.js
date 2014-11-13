@@ -33,9 +33,23 @@ exports.run = function( req, res, next, importConfig, matcherKey ) {
         var msg = 'reverse proxy: ' + req.url + ' to ' + targetUrl;
 
         utils.clog.tip( msg );
+        
+        debugger;
 
         if ( !error && response.statusCode == 200 ) {
-            res.end( body );
+
+            // 需要设置headers
+            _.each( response.headers, function ( value, key ) {
+                res.setHeader( key, value );
+            } );
+            var out = body;
+            if ( utils.judgeImage( response ) ) {
+                out = 
+                    fs.readFileSync( path.join( config.webContent, targetUrl ) );
+                utils.clog.tell( 'response is image type: ' + targetUrl
+                    + ' use `readFileSync` to get image data' );
+            }
+            res.end( out );
             return;
         }
 
