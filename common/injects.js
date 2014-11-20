@@ -15,9 +15,13 @@ module.exports = {
             + config.wsweinredebug;
 
         jsdom.env(
-            output, [ script ],
+            output, //[ script ],
             function( errors, window ) {
                 var doc = window.document;
+                var body = doc.body;
+                var scriptEle = doc.createElement( 'script' );
+                scriptEle.src = script;
+                body.appendChild( scriptEle );
                 callback( serializeDocument( doc ) );
             }
         );
