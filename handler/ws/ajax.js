@@ -48,6 +48,16 @@ var make = function( url2filename, fullpath, req, res ) {
         utils.clog.tip( 'ajax: ' + req.url );
 
         res.setHeader( 'Content-Type', 'text/html;charset=UTF-8' );
+
+        if ( context.__sleep__ ) {
+            
+            setTimeout( function () {
+                res.end( JSON.stringify( context ) );
+            }, context.__sleep__ );
+
+            return;
+        }
+
         res.end( JSON.stringify( context ) );
 
     };
