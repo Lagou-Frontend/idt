@@ -96,6 +96,12 @@ var createCommonMock = function ( callback ) {
 
 var create = function( url2filename, fullpath, req, res ) {
 
+    // 在真正生成目录结构之前，检查是否真正有必要生成此目录结构，如果根本就不存在对应的html页面，就无需生成了
+    if ( !fs.existsSync( path.join( config.webContent, url2filename ) ) ) {
+        res.end( 'There is no need to create mock file, because this `*.html` file does not exist. :)' );
+        return;
+    }
+
     // 构建目录结构
     mkdirp( path.dirname( fullpath ), function( err ) {
         if ( err ) throw ( err )
@@ -115,6 +121,7 @@ exports.run = function( req, res, next, importConfig ) {
 
     // 去掉 html 后面附加的参数: xxx.html?a=1 => /a/b/xxxx.html
     var url = utils.trimUrlQuery( req.url );
+    // console.log( url ); // /tpl/custom/search.html
     // template_mycenter_myresume.html.js"
     // var url2filename = utils.handleMockFullname( url );
     var fullpath = path.join( config.mockVelocity, utils.handleMockJsTail( url ) );
