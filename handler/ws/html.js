@@ -8,6 +8,8 @@ var mkdirp = require( 'mkdirp' );
 
 var idtconfig = require( '../../config' );
 var utils = require( '../../common/utils' );
+var injects = require( '../../common/injects' );
+
 var _ = require( 'underscore' );
 
 var shell = require( 'shelljs' );
@@ -36,13 +38,12 @@ var make = function( url2filename, fullpath, req, res ) {
     fs.exists( commonPath, function( exists ) {
         if ( exists ) {
             commonAndAnswer();
-        }
-        else {
+        } else {
             createCommonMock( commonAndAnswer );
         }
     } );
 
-    var commonAndAnswer = function () {
+    var commonAndAnswer = function() {
 
         delete require.cache[ require.resolve( commonPath ) ];
         commonPathRequired = require( commonPath );
@@ -59,16 +60,25 @@ var make = function( url2filename, fullpath, req, res ) {
         }
         var context = _.extend( fullpathRequired, commonPathRequired );
         res.setHeader( 'Content-Type', 'text/html;charset=UTF-8' );
-        res.end( engine.render( context ) );
+        var output = engine.render( context );
+
+        if ( config.wsweinredebug != 'off' ) {
+            // 需要注入script元素
+            return injects.weinre( config, output, function ( result ) {
+                res.end( result );
+            } );
+        }
+
+        res.end( output );
 
     };
 
 };
 
-var createCommonMock = function ( callback ) {
+var createCommonMock = function( callback ) {
 
     // 需要新建立velocity的commonmock/common.js
-    var source = path.resolve( 
+    var source = path.resolve(
         path.join( __dirname, '../../store', 'commonmock' ) );
     var target = path.resolve( config.mockVelocity );
 
@@ -84,7 +94,9 @@ var createCommonMock = function ( callback ) {
 
     utils.clog.cmd( 'running ' + comm );
 
-    shell.exec( comm, { async: false }, function( code, output ) {
+    shell.exec( comm, {
+        async: false
+    }, function( code, output ) {
         utils.clog.nor( 'Exit code: ' + utils.errorMaps[ code ] );
         // console.log( 'Program output:', output );
 

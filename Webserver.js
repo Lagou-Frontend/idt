@@ -18,6 +18,8 @@ var handlerRProxy = require( './handler/ws/reverse' );
 
 var config;
 
+var wsweinredebug;
+
 /**
  * onCreateServer
  * @param  {Object} server  [description]
@@ -120,6 +122,11 @@ module.exports = function( grunt ) {
 
     var webconfigpath = grunt.option( 'configpath' );
     config = require( webconfigpath );
+
+    // 以配置文件为准，如果需要build出来的话，也是需要的
+    config.wsweinredebug = config.wsWeinreDebug || grunt.option( 'wsweinredebug' );
+    config.weinredebugport = config.weinreDebugPort || grunt.option( 'weinredebugport' );
+    config.weinredebughost = config.weinreDebugHost || grunt.option( 'weinredebughost' );
 
     // Project configuration.
     grunt.initConfig( {

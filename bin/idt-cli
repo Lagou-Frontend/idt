@@ -17,17 +17,21 @@ program.option( '-c, --config [config]',
 
 program
     .command( 'ws <action>' )
+    .option( '-r, --remote [username]', 'enable weinre debug', 'off' )
+    .option( '-h, --hostfordebug [hostfordebug]', 'weinre debug host', 'localhost' )
+    .option( '-p, --portfordebug [portfordebug]', 'weinre debug port', '8080' )
     .description( 'run webserver: `idt ws start`. <action> now only has `start` option' )
-    .action( function ( action ) {
-        clis.ws.call( program, action );
+    .action( function ( action, options ) {
+        clis.ws.call( program, action, options );
     } );
 
 program
     .command( 'build [dirs...]' )
+    .option( '-d, --debugremote', 'enable weinre debug' )
     .option( '-r, --release', 'release you project' )
     .description( 'build your project, dir is optional' )
     .action( function ( dirs, options ) {
-        clis.build.call( program, dirs, options.release );
+        clis.build.call( program, dirs, options );
     } );
 
 program

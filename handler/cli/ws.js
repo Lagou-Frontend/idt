@@ -12,6 +12,11 @@ var utils = require( '../../common/utils' );
 
 var configFile;
 var config;
+
+var enableWeinreDebug;
+var weinreDebugPort;
+var weinreDebugHost;
+
 /**
  * 启动服务器
  * @return {[type]} [description]
@@ -27,6 +32,12 @@ var startWs = function() {
         path.join( __dirname, '../../', idtconfig.wsName ),
         ' --configpath ',
         path.join( dir, configFile ),
+        ' --wsweinredebug ',
+        enableWeinreDebug,
+        ' --weinredebugport ',
+        weinreDebugPort,
+        ' --weinredebughost ',
+        weinreDebugHost,
 
     ].join( '' );
 
@@ -45,11 +56,15 @@ var ceIdtConfig = function () {
 
 };
 
-module.exports = function( action ) {
+module.exports = function( action, options ) {
 
     var program = this;
     configFile = program.config;
     utils.clog.cmd( 'running idt ws(webserver) %s, use ' + configFile, action );
+
+    enableWeinreDebug = options.remote;
+    weinreDebugPort = options.portfordebug;
+    weinreDebugHost = options.hostfordebug;
 
     switch ( action ) {
 

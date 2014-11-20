@@ -19,6 +19,7 @@ var userConfig;
 var userBuilds;
 // 是否release
 var isRelease;
+var isDebugRemote;
 
 // 针对子文件夹的build
 var buildMulti = function() {
@@ -301,13 +302,13 @@ var buildRootCopy = function() {
 };
 
 // 对根目录的build
-var buildRoot = function() {
+var buildRoot = function( configfile ) {
 
     // root的build需要自己先写好idt-config.js文件
     var comm = [
 
         'edp build ',
-        '--config=idt-config.js ',
+        configfile ? ( '--config=' + configfile + ' ' ) : '--config=idt-config.js ',
         '--stage=',
         isRelease ? 'release' : 'default',
         ' -f'
@@ -321,17 +322,71 @@ var buildRoot = function() {
         // console.log( 'Program output:', output );
         // copy something
         buildRootCopy();
+        // del configfile
+        configfile && delConfigfile( configfile );
     } );
 
 };
 
-module.exports = function( dirs, release ) {
+function delConfigfile( file ) {
+
+    var comm = [
+
+        'rm -f ',
+        file
+
+    ].join( '' );
+
+    utils.clog.cmd( 'running ' + comm );
+
+    shell.exec( comm, {
+        async: false
+    } );
+
+}
+
+function buildForDebug( program ) {
+
+    // userConfig.replaces.replacements.push( {
+    //     from: /\<\/body\>/,
+    //     to: '<script class="jsdom" src="http://' 
+    //         + userConfig.weinreDebugHost + ':'
+    //         + userConfig.weinreDebugPort + '/target/target-script-min.js#'
+    //         + userConfig.wsWeinreDebug + '"></script></body>'
+    // } );
+
+    var from = '/\\<\\/body\\>/';
+    var to = '<script class="jsdom" src="http://' 
+        + userConfig.weinreDebugHost + ':' 
+        + userConfig.weinreDebugPort + '/target/target-script-min.js#' 
+        + userConfig.wsWeinreDebug + '"></script></body>';
+
+    var filepath = path.resolve( currentDir, program.config );
+    var newfilepath = path.resolve( currentDir, '.idt-config.js' );
+    var filecontent = fs.readFileSync( filepath );
+    fs.writeFileSync( newfilepath,
+        filecontent
+        .toString()
+        .replace( /replacements:\s+\[(.*)\]/, 'replacements:[$1' + ',' +
+            '{from:' + from + ',to:\'' + to + '\'}' + ']' ) );
+
+    buildRoot( '.idt-config.js' );
+
+}
+
+module.exports = function( dirs, options ) {
     var program = this;
     utils.clog.cmd( 'running idt build, use ' + program.config );
 
     userConfig = require( path.resolve( currentDir, program.config ) );
     userBuilds = dirs;
-    isRelease = release;
+    isRelease = options.release;
+    isDebugRemote = options.debugremote;
+
+    // 判断是不是需要对远程调试进行build
+    if ( userConfig.wsWeinreDebug != 'off' && isDebugRemote ) {
+        return buildForDebug( program );
+    }
 
     // 如果没有附带参数，则从当前目录开始构建
     dirs.length ? buildMulti() : buildRoot();
