@@ -14,6 +14,7 @@ var utils = require( './common/utils' );
 var handlerHtml = require( './handler/ws/html' );
 var handlerAjax = require( './handler/ws/ajax' );
 var handlerLess = require( './handler/ws/less' );
+var handlerAtpl = require( './handler/ws/atpl' );
 var handlerRProxy = require( './handler/ws/reverse' );
 
 var config;
@@ -94,6 +95,13 @@ var middleWares = function( connect, options, middlewares ) {
     middlewares.unshift( function( req, res, next ) {
         if ( utils.isLess( req ) )
             return handlerLess.run( req, res, next, config );
+        return next();
+    } );
+
+    // atpl
+    middlewares.unshift( function( req, res, next ) {
+        if ( utils.isAtpl( req ) )
+            return handlerAtpl.run( req, res, next, config );
         return next();
     } );
 

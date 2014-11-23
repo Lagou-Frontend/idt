@@ -173,6 +173,15 @@ module.exports = {
 
         return checkUrlTail( url, 'less' );
 
+    },
+
+    isAtpl: function( req ) {
+
+        // *.atpl.js
+        var url = trimUrlQuery( req.url ).split( '.js' )[ 0 ];
+
+        return checkUrlTail( url, 'atpl' );
+
     }
 
 };

@@ -37,7 +37,7 @@ var weinreDebugHost = '' || 'localhost'; // default localhost
 
 // 字符串替换
 var replaces = {
-    exclude: [ '*.*' ],
+    exclude: [ '*' ],
     include: [ '*.html' ],
     replacements: [ { from: /\#parse\( \"/g, to: '#parse( "mobile/tpl/' } ]
 };
@@ -46,7 +46,7 @@ module.exports = {
 
     //---以下为idt相关配置---//
     // port
-    webPort: '8002',
+    webPort: '8001',
 
     // 项目中的webcontent
     webContent: webContent,
@@ -115,11 +115,15 @@ module.exports = {
     weinreDebugPort: weinreDebugPort, // default 8080
     weinreDebugHost: weinreDebugHost, // default localhost 
 
+    // 是否对'*.atpl.js'这种请求进行判断
+    // false: 读取'*.atpl'
+    // true: 读取'*.atpl.js'
+    wsNoNeed2TrimDotJs: true,
+
     // 以下三项最后的buildLevel不要修改
     // 需要build入的目录
     buildPath: path.resolve(
-        'path/to/WebContent',
-        buildLevel ),
+        '/WebContent/template/mobile' ),
     //---以下为edp相关配置---//
     input: path.resolve( webContent, buildLevel ),
     // 【无需修改】
@@ -129,12 +133,27 @@ module.exports = {
     replaces: replaces,
 
     getProcessors: function() {
-        var lessProcessor = new LessCompiler();
+        var lessProcessor = new LessCompiler( {
+            // // 在build的时候，没有必要对每一个less都进行编译，因为很可能有一些被import入的less文件
+            // // 会编译出错【不会影响整体样式】，只需在include中写入每一个页面的入口main.less文件即可
+            // exclude: [ '*.less' ],
+            // include: [ 
+            //     'src/center/mine/css/mine.less',
+            //     'src/custom/search/css/search.less'
+            //  ]
+        } );
         var cssProcessor = new CssCompressor( {
             compressOptions: {
                 keepBreaks: false
             }
         } );
+        var html2JsCompilerProcessor = new Html2JsCompiler( {
+            mode: 'compress',
+            extnames: [ 'atpl' ],
+            combine: true,
+            exclude: [ '*' ],
+            include: [ '*.atpl' ]
+        } ); 
         var moduleProcessor = new ModuleCompiler();
         var jsProcessor = new JsCompressor();
         var pathMapperProcessor = new PathMapper();
@@ -145,13 +164,14 @@ module.exports = {
 
         return {
             // 默认的build不需要压缩，以便开发（联调）的时候，利于调试
-            'default': [ lessProcessor, moduleProcessor, pathMapperProcessor, 
-                stringReplace ],
+            'default': [ lessProcessor, html2JsCompilerProcessor,
+                        moduleProcessor, pathMapperProcessor, 
+                        stringReplace ],
             // 在最后联调成功以后，要进行release，会进行代码压缩等处理
             'release': [
-                lessProcessor, cssProcessor, moduleProcessor,
-                jsProcessor, pathMapperProcessor, addCopyright, 
-                stringReplace
+                lessProcessor, cssProcessor, html2JsCompilerProcessor,
+                moduleProcessor,jsProcessor, pathMapperProcessor, 
+                addCopyright, stringReplace
             ]
         };
     },

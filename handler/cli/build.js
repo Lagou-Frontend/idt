@@ -40,9 +40,13 @@ var buildMulti = function() {
 
     isRelease && compressHtmlForItem();
 
-    deleteAssets();
+    // deleteAssets();
 
     deleteTemp();
+
+    // clearAfter();
+    
+    afterBuild();
 
 };
 
@@ -276,7 +280,7 @@ var compressHtml = function() {
     shell.exec( comm, function( code, output ) {
         utils.clog.nor( 'Exit code: ' + utils.errorMaps[ code ] );
         // console.log( 'Program output:', output );
-        deleteAssets();
+        afterBuild();
     } );
 
 };
@@ -297,7 +301,7 @@ var buildRootCopy = function() {
         return;
     }
 
-    deleteAssets();
+    afterBuild();
 
 };
 
@@ -374,6 +378,43 @@ function buildForDebug( program ) {
 
 }
 
+function clearAfter () {
+
+    var comm = [
+
+        'find . -name "*.atpl.js" | xargs rm'
+
+    ].join( '' );
+
+    utils.clog.cmd( 'running ' + comm );
+
+    shell.exec( comm, {
+        async: false
+    } );
+
+    comm = [
+
+        'find ',
+        userConfig.buildPath,
+        ' -name "*.less" | xargs rm'
+
+    ].join( '' );
+
+    utils.clog.cmd( 'running ' + comm );
+
+    shell.exec( comm, {
+        async: false
+    } );
+
+}
+
+function afterBuild () {
+
+    deleteAssets();
+    clearAfter();
+
+}
+
 module.exports = function( dirs, options ) {
     var program = this;
     utils.clog.cmd( 'running idt build, use ' + program.config );
@@ -390,5 +431,10 @@ module.exports = function( dirs, options ) {
 
     // 如果没有附带参数，则从当前目录开始构建
     dirs.length ? buildMulti() : buildRoot();
+
+    // 清理
+    // clearAfter();
+    
+    // 应该把命令执行都写成同步模式
 
 };
