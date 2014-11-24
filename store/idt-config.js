@@ -24,10 +24,9 @@ var path = require( 'path' );
 
 // 当前文件夹路径【无需修改】
 var webContent = __dirname;
-// 二级目录设置【可选】
+// 二级目录设置【无需修改】
 var secondary = '';
-
-// build子目录时可能需要用到【不要修改】
+// build子目录时可能需要用到【无需修改】
 var buildLevel = '';
 
 // web inspector remote 的配置
@@ -35,7 +34,7 @@ var wsWeinreDebug = 'pooky' || 'off'; // debug username, 关闭调试: `off`
 var weinreDebugPort = '' || '8080'; // default 8080
 var weinreDebugHost = '' || 'localhost'; // default localhost 
 
-// 字符串替换
+// html中的字符串替换任务
 var replaces = {
     exclude: [ '*' ],
     include: [ '*.html' ],
@@ -54,9 +53,9 @@ module.exports = {
     // velocity的template模板根目录
     templates: path.join( webContent, secondary, 'tpl' ),
 
-    // 【无需修改】
+    // mock数据支持【一般情况下无需修改】
     mockCommon: 'commonmock/common.js',
-    // mock数据目录，这个需要在自己的目录中自行建立，更新到项目的目录中去维护
+    // mock数据目录，这个需要在自己的目录中自行建立，更新到项目的目录中去维护【一般情况下无需修改】
     mockVelocity: path.join( webContent, secondary, 'mock/velocity' ),
     mockAjax: path.join( webContent, secondary, 'mock/ajax' ),
 
@@ -118,13 +117,15 @@ module.exports = {
     // 是否对'*.atpl.js'这种请求进行判断
     // false: 读取'*.atpl'
     // true: 读取'*.atpl.js'
-    wsNoNeed2TrimDotJs: true,
+    wsNoNeed2TrimDotJs: false,
 
     // 以下三项最后的buildLevel不要修改
-    // 需要build入的目录
+    // 需要build入的目录【需要手动配置】
     buildPath: path.resolve(
         '/WebContent/template/mobile' ),
+
     //---以下为edp相关配置---//
+    // 【无需修改】
     input: path.resolve( webContent, buildLevel ),
     // 【无需修改】
     output: path.resolve( __dirname, '.output', buildLevel ),
