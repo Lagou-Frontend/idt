@@ -4,6 +4,7 @@
 
 var fs = require( 'fs' );
 var path = require( 'path' );
+var urler = require( 'url' );
 var colors = require( 'colors' );
 
 var _ = require( 'underscore' );
@@ -12,18 +13,25 @@ var os = require( 'os' );
 var mimetype = require( './mimetype' );
 
 /**
- * 去掉查询字符串
+ * 去掉查询字符串等
  *
  * @param  {string} url [description]
  * @return {boolean}     [description]
  */
 var trimUrlQuery = function( url ) {
 
-    if ( ~url.indexOf( '?' ) ) {
-        return url.substring( 0, url.lastIndexOf( '?' ) )
-    } else {
-        return url;
-    }
+    // if ( ~url.indexOf( '?' ) ) {
+    //     return url.substring( 0, url.lastIndexOf( '?' ) )
+    // } else {
+    //     return url;
+    // }
+
+    var parsed = urler.parse( url );
+    var protocol = parsed.protocol ? ( parsed.protocol + '//' ) : '';
+    var host = parsed.host ? parsed.host : '';
+    var pathname = parsed.pathname ? parsed.pathname : 'about:blank;';
+
+    return protocol + host + pathname;
 
 };
 

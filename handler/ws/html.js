@@ -20,9 +20,11 @@ var config;
 
 var make = function( url2filename, fullpath, req, res ) {
     debugger;
+
     var engine = new Engine( {
         root: config.templates,
-        template: config.webContent + req.url,
+        // template: config.webContent + url2filename,
+        template: path.join( config.webContent, url2filename ),
         cache: false
     } );
 
