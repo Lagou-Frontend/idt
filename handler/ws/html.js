@@ -12,6 +12,8 @@ var injects = require( '../../common/injects' );
 
 var _ = require( 'underscore' );
 
+var urlparser = require( 'urlparse' );
+
 var shell = require( 'shelljs' );
 
 var Engine = require( 'velocity' ).Engine;
@@ -58,7 +60,7 @@ var make = function( url2filename, fullpath, req, res ) {
         // 判断是否为function
         if ( typeof( fullpathRequired ) == 'function' ) {
             // 带入请求对象，此function需要返回object
-            fullpathRequired = fullpathRequired.call( req );
+            fullpathRequired = fullpathRequired.call( req, urlparser( req.url ) );
         }
         var context = _.extend( fullpathRequired, commonPathRequired );
         res.setHeader( 'Content-Type', 'text/html;charset=UTF-8' );

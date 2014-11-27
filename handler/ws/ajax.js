@@ -11,6 +11,8 @@ var idtconfig = require( '../../config' );
 var utils = require( '../../common/utils' );
 var _ = require( 'underscore' );
 
+var urlparser = require( 'urlparse' );
+
 var Engine = require( 'velocity' ).Engine;
 
 var config;
@@ -40,7 +42,7 @@ var make = function( url2filename, fullpath, req, res ) {
         // 判断是否为function
         if ( typeof( fullpathRequired ) == 'function' ) {
             // 带入请求对象，此function需要返回object
-            fullpathRequired = fullpathRequired.call( req );
+            fullpathRequired = fullpathRequired.call( req, urlparser( req.url ) );
         }
         var context = _.extend( fullpathRequired, commonPathRequired );
 
