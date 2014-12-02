@@ -1,5 +1,5 @@
 /**
- * run ../shell/separate_static.sh
+ * run ../shell/delete_empty.sh
  */
 
 var shell = require( 'shelljs' );
@@ -14,9 +14,10 @@ module.exports = function( targetpath ) {
 
     var comm = [
 
-        'find ', 
+        'sh ',
+        path.resolve( __dirname, '../shell', idtconfig.shell.de ),
+        ' ',
         targetpath,
-        ' -type d -empty -delete'
 
     ].join( '' );
 

@@ -6,7 +6,8 @@ module.exports = {
 
     // 分离静态资源的脚本
     shell: {
-        sp: 'separate_static.sh'
+        sp: 'separate_static.sh',
+        de: 'delete_empty.sh'
     },
 
     configName: 'idt-config.js',
