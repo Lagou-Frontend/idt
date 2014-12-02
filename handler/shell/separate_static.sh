@@ -23,7 +23,7 @@ else
 	filetype="$filetype""$"
 fi
 
-filelists=`find $filedir -type f|egrep -v "$filetype"|xargs`
+filelists=`find $filedir -type f|egrep -v "$filetype|.svn|.git"|xargs`
 
 for i in $filelists
 do
