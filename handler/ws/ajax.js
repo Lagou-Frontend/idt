@@ -68,12 +68,15 @@ var make = function( url2filename, fullpath, req, res ) {
 
 var create = function( url2filename, fullpath, req, res ) {
 
+    var args = arguments;
+
     // 构建目录结构
     mkdirp( path.dirname( fullpath ), function( err ) {
         if ( err ) throw ( err )
-        fs.writeFile( fullpath, '//mock your ajax data', function( err ) {
+        fs.writeFile( fullpath, idtconfig.mock, function( err ) {
             if ( err ) throw err;
-            res.end( 'Had create mock file for you, go to mock directory, write your mock data. :)' );
+            // res.end( 'Had create mock file for you, go to mock directory, write your mock data. :)' );
+            make.apply( null, args );
         } );
     } );
 

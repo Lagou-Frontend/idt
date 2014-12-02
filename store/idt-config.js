@@ -1,74 +1,112 @@
 /**
- * idt配置文件
+ * idt全局配置文件
  */
 
 /**
- * module.conf 的样例示范，在根目录build，需要在根目录建立一个module.conf文件
- * 它是用来配置module模块，但是现在整体还没有用到，所以建立一个如下内容的文件即可
+ * 在项目根目录执行build，需要在根目录建立一个`module.conf`文件
+ * 它是用来配置module模块，如下内容的文件：
+ *   {
+ *       "baseUrl": "src",
+ *       "packages": [ ],
+ *       "combine": {
+ *           "custom/search/main": 1,
+ *           "center/mine/main": 1,
+ *           "custom/position/main": 1,
+ *           "custom/city/main": 1,
+ *           "custom/list/main": 1,
+ *           "custom/mine/main": 1,
+ *           "custom/salary/main": 1,
+ *           "custom/stages/main": 1
+ *       }
+ *   }
  */
-
-// {
-//     "baseUrl": "./",
-//     "packages": [ ],
-//     "combine": { }
-// }
 
 /**
- * 在根目录构建，可以新建一个`copyright.txt`文件，来给所有build出来的文件，添加统一的版权声明
- * 例如：
+ * 在根目录构建，可以新建一个`copyright.txt`文本文件来给所有build出来的文件，添加统一的版权
+ * 声明，例如：
+ * 
+ * "! 2014 Lagou Inc. All Rights Reserved"
+ *
+ * 【此文件可以自动生成了，可以在本配置文件中写好配置即可】
  */
-
-/*! 2014 Lagou Inc. All Rights Reserved */
 
 var path = require( 'path' );
 
 // 当前文件夹路径【无需修改】
 var webContent = __dirname;
-// 二级目录设置【无需修改】
-var secondary = '';
-// build子目录时可能需要用到【无需修改】
-var buildLevel = '';
 
-// web inspector remote 的配置
-var wsWeinreDebug = 'pooky' || 'off'; // debug username, 关闭调试: `off`
-var weinreDebugPort = '' || '8080'; // default 8080
-var weinreDebugHost = '' || 'localhost'; // default localhost 
+// web inspector remote 的配置及其使用参看：
+// http://people.apache.org/~pmuellr/weinre-docs/latest/Running.html
+// debug username, 关闭调试: `off`，如果设置此项，则开启调试，不设置即为`off`关闭
+var wsWeinreDebug = '' || 'off';
+// default 8080
+var weinreDebugPort = '' || '8080'; 
+// default localhost 
+var weinreDebugHost = '' || 'localhost'; 
 
-// html中的字符串替换任务
+// 执行`build`的时候字符串替换的配置，下面此句的意思是，所有的`html`文件中的`#parse( "`
+// 均替换成`#parse( "mobile/tpl/`
+// 【此项视情况而定】
 var replaces = {
     exclude: [ '*' ],
     include: [ '*.html' ],
     replacements: [ { from: /\#parse\( \"/g, to: '#parse( "mobile/tpl/' } ]
 };
 
+// 二级目录设置【一般不需修改】
+var secondary = '';
+// build子目录时需要用到【无需修改】
+var buildLevel = '';
+
 module.exports = {
 
-    //---以下为idt相关配置---//
-    // port
-    webPort: '8001',
+    // webserver的端口号
+    webPort: '8003',
 
-    // 项目中的webcontent
+    // webserver的项目根目录【一般不需修改】，即为当前`pwd`的目录
     webContent: webContent,
 
-    // velocity的template模板根目录
+    // velocity的template模板根目录【只需要修改最后一个参数即可】
     templates: path.join( webContent, secondary, 'tpl' ),
 
-    // mock数据支持【一般情况下无需修改】
-    mockCommon: 'commonmock/common.js',
-    // mock数据目录，这个需要在自己的目录中自行建立，更新到项目的目录中去维护【一般情况下无需修改】
-    mockVelocity: path.join( webContent, secondary, 'mock/velocity' ),
-    mockAjax: path.join( webContent, secondary, 'mock/ajax' ),
+    // 单路径整体build【String】
+    // buildPath: '../outs/outall',
 
-    // 反向代理配置
+    // 多路径整体build【Array】
+    // buildPath: [ '../outs/o1', '../outs/o2' ],
+
+    // 多路径整体build，但是需要资源分离【Object】
+    buildPath: {
+
+        // 键名是需要存留的文件，键值是对应的build路径
+
+        '.js': '../outs/outjs/mobile',
+        '.css': '../outs/outcss/mobile',
+        '.jpg|.jpeg|.gif|.png': '../outs/outimg/mobile',
+        '.html|.htm': '../outs/outtemplate/mobile',
+
+        // template的buildpath直接诶通过templates路径指定
+
+    },
+
+    // 反向代理配置【按需配置】，键名可以随意，只要是每一个的匹配规则
     reverseProxyMap: {
 
-        // 键名可以随意
+        tpl: {
+            pattern: /^\/custom\//,
+            replace: '/tpl/custom/'
+        },
+
+        center: {
+            pattern: /^\/center\//,
+            replace: '/tpl/center/'
+        },
+
         mobile: {
             pattern: /^\/mobile\//,
             replace: '\/'
         },
 
-        // 奇葩
         template2mobile: {
             pattern: /^\/template\/mobile\//,
             replace: '\/'
@@ -76,20 +114,37 @@ module.exports = {
 
     },
 
+    // 是否对'*.atpl.js'这种请求进行判断【一般不需修改】
+    // false: 读取'*.atpl'
+    // true: 读取'*.atpl.js'
+    wsNoNeed2TrimDotJs: false,
+
+    // mock 相关配置【一般不需修改】
+    mockCommon: 'commonmock/common.js',
+    mockVelocity: path.join( webContent, secondary, 'mock/velocity' ),
+    mockAjax: path.join( webContent, secondary, 'mock/ajax' ),
+
     /**
      * web server 中间层
      * requester 是一个请求器，可以用来做反向代理等等
      * 
-     * @param  {[type]} connect     [description]
-     * @param  {[type]} options     [description]
-     * @param  {Array} middlewares 系统中间层
-     * @param  {Object} rtool      { requester: 请求器, defaulthostp: '默认的本地域名' }
-     * @return {[type]}             [description]
+     * @param  {Object} connect
+     * @param  {Object} options
+     * @param  {Array}  middlewares 系统中间层
+     * @param  {Object} rtool       
+     * { 
+     *     requester: 请求器, 
+     *     defaulthostp: '默认的本地域名' 
+     * }
+     * @return {Array}  中间层数组
      */
     middlewares: function( connect, options, middlewares, rtool ) {
 
-        // inject a custom middleware into the array of default middlewares
-        // html example
+        // how to inject a custom middleware into the array of default 
+        // middlewares
+        // 
+        // html middlewares example:
+        // 
         // middlewares.unshift( function( req, res, next ) {
         //     if ( utils.isHtml( req ) )
         //         return handlerHtml.run( req, res, next, config );
@@ -97,46 +152,40 @@ module.exports = {
         // } );
 
         middlewares.unshift( function( req, res, next ) {
-            
+            // 这是一个可以自定义的中间层
             console.log( 'user middleware, request url: ' + req.url );
-
             return next();
         } );
 
+        // 如果需要请求对应的线上数据或者其他域的数据，可以使用 requester 来请求
+        // requester的使用参见：
+        // https://www.npmjs.org/package/request
         // console.log( rtool.requester, rtool.defaulthostp );
 
         return middlewares;
 
     },
 
-    // web inspector remote 的配置
-    wsWeinreDebug: wsWeinreDebug, // debug username, 关闭调试: `off`
-    weinreDebugPort: weinreDebugPort, // default 8080
-    weinreDebugHost: weinreDebugHost, // default localhost 
+    wsWeinreDebug: wsWeinreDebug,
+    weinreDebugPort: weinreDebugPort,
+    weinreDebugHost: weinreDebugHost,
 
-    // 是否对'*.atpl.js'这种请求进行判断
-    // false: 读取'*.atpl'
-    // true: 读取'*.atpl.js'
-    wsNoNeed2TrimDotJs: false,
-
-    // 以下三项最后的buildLevel不要修改
-    // 需要build入的目录【需要手动配置】
-    buildPath: path.resolve(
-        '/WebContent/template/mobile' ),
-
-    //---以下为edp相关配置---//
     // 【无需修改】
     input: path.resolve( webContent, buildLevel ),
     // 【无需修改】
     output: path.resolve( __dirname, '.output', buildLevel ),
-
-    // 留出引用【无需修改】
+    // 【无需修改】
     replaces: replaces,
 
+    // build 处理器配置
     getProcessors: function() {
         var lessProcessor = new LessCompiler( {
-            // // 在build的时候，没有必要对每一个less都进行编译，因为很可能有一些被import入的less文件
-            // // 会编译出错【不会影响整体样式】，只需在include中写入每一个页面的入口main.less文件即可
+            // 【此项先不做配置了】
+            // 
+            // 在build的时候，没有必要对每一个less都进行编译，因为很可能有一些被import
+            // 入的less文件会编译出错【不会影响整体样式】，只需在include中写入每一个页面的
+            // 入口main.less文件即可
+            // 
             // exclude: [ '*.less' ],
             // include: [ 
             //     'src/center/mine/css/mine.less',
@@ -159,8 +208,6 @@ module.exports = {
         var jsProcessor = new JsCompressor();
         var pathMapperProcessor = new PathMapper();
         var addCopyright = new AddCopyright();
-
-        // 字符串替换
         var stringReplace = new StringReplace( replaces );
 
         return {
@@ -177,6 +224,7 @@ module.exports = {
         };
     },
 
+    // build 中需要排除的文件（夹）
     exclude: [
         'demo',
         'Gruntfile.js',
@@ -214,16 +262,16 @@ module.exports = {
         'copyright.txt',
         'package.json',
         'README.md',
-        // 移动端的mobile现在还在WebContent中，要排除掉
         'mobile',
         'idt-config.js',
+        'idt-config.js.bak',
         // pagefooter.html为建立下载模板，build会出错，故排除，但是需要单独处理
         'pagefooter.html',
         'WEB-INF',
         'mock'
     ],
 
-    // 和上面的保持一致就可以，idt单独对齐进行copy
+    // 和上面的保持一致就可以，idt单独对其进行copy
     idtCopyList: [],
 
     // do not modify

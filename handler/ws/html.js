@@ -112,6 +112,8 @@ var createCommonMock = function( callback ) {
 
 var create = function( url2filename, fullpath, req, res ) {
 
+    var args = arguments;
+
     // 在真正生成目录结构之前，检查是否真正有必要生成此目录结构，如果根本就不存在对应的html页面，就无需生成了
     if ( !fs.existsSync( path.join( config.webContent, url2filename ) ) ) {
         res.end( 'There is no need to create mock file, because this `*.html` file does not exist. :)' );
@@ -121,9 +123,10 @@ var create = function( url2filename, fullpath, req, res ) {
     // 构建目录结构
     mkdirp( path.dirname( fullpath ), function( err ) {
         if ( err ) throw ( err )
-        fs.writeFile( fullpath, '//mock your velocity data', function( err ) {
+        fs.writeFile( fullpath, idtconfig.mock, function( err ) {
             if ( err ) throw err;
-            res.end( 'Had create mock file for you, go to mock directory, write your mock data. :)' );
+            // res.end( 'Had create mock file for you, go to mock directory, write your mock data. :)' );
+            make.apply( null, args );
         } );
     } );
 

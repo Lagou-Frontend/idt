@@ -6,9 +6,11 @@ var shell = require( 'shelljs' );
 var utils = require( '../../common/utils' );
 var path = require( 'path' );
 var idtconfig = require( '../../config' );
+var runner = require( '../runner/main' );
 
 var fs = require( 'fs' );
 var mkdirp = require( 'mkdirp' );
+var _ = require( 'underscore' );
 
 // 当前操作路径
 var currentDir = process.cwd();
@@ -71,6 +73,7 @@ var deleteTemp = function() {
         if ( !~targetPath.lastIndexOf( path.basename( item ) ) ) {
             item = path.dirname( item );
         }
+        item = utils.src2asset( item );
         deleteSingleModuleConf( item );
 
     } );
@@ -120,6 +123,24 @@ var runBuildItem = function( targetPath, item ) {
 
 };
 
+var compressHtmlForItemRunner = function ( item, targetPath ) {
+
+    if ( !targetPath ) {
+
+        _.each( userConfig.buildPath, function ( value, key ) {
+            compressHtmlForItemRunner( item, value );
+        } );
+
+        return;
+
+    }
+
+    runner.htmlmin( 
+        path.join( targetPath, item, '/' ), 
+        path.join( userConfig.output, item ) );
+
+};
+
 var compressHtmlForItem = function() {
 
     userBuilds.forEach( function( item, index ) {
@@ -127,35 +148,9 @@ var compressHtmlForItem = function() {
         if ( !~targetPath.lastIndexOf( path.basename( item ) ) ) {
             item = path.dirname( item );
         }
-        // var target = path.join( currentDir, item );
 
-        var comm = [
-
-            'java -jar ',
-            path.join( __dirname, '../../', idtconfig.htmlMin ),
-            ' ',
-
-            '--remove-style-attr ',
-            '--remove-link-attr ',
-            '--remove-script-attr ',
-            // '--compress-js ',
-            '--compress-css ',
-            // '--nomunge ',
-            // '--js-compressor closure ',
-            // '--closure-opt-level advanced ',
-
-            '--type html --recursive -o ',
-            path.join( userConfig.buildPath, item, '/' ),
-            ' ',
-            path.join( userConfig.output, item )
-
-        ].join( '' );
-
-        utils.clog.cmd( 'running ' + comm );
-
-        shell.exec( comm, {
-            async: false
-        } );
+        item = utils.src2asset( item );
+        compressHtmlForItemRunner( item );
 
     } );
 
@@ -185,6 +180,11 @@ var buildItem = function( target, item ) {
     // 命令要使用同步模式
     runBuildItem( targetPath, item );
 
+    // 针对item的build如果一级目录有`src`，需要替换成`asset`
+    item.indexOf( 'src' ) == 0
+        && runner.mvsrc( 
+            path.resolve( userConfig.output ) );
+
 };
 
 var runCopy = function( fileName ) {
@@ -208,17 +208,31 @@ var runCopy = function( fileName ) {
 
 };
 
-var copyAssets = function() {
+var copyAssets = function( targetPath ) {
+
+    // 一个可递归的函数
+    if ( !targetPath ) {
+
+        // 第一次调用需要循环
+        _.each( userConfig.buildPath, function ( value, key ) {
+            copyAssets( value );
+            // !( parseInt( key ) == key )
+            //     && runner.sp( value, key )
+            //     && runner.reempty( value );
+        } )
+
+        return;
+    }
 
     // 检查目标路径
-    !fs.existsSync( userConfig.buildPath ) && mkdirp.sync( userConfig.buildPath );
+    !fs.existsSync( targetPath ) && mkdirp.sync( targetPath );
 
     var comm = [
 
         'cp -rf ',
         path.join( userConfig.output, '/*' ),
         ' ',
-        path.join( userConfig.buildPath )
+        path.join( targetPath )
 
     ].join( '' );
 
@@ -251,37 +265,23 @@ var deleteAssets = function() {
 
 };
 
-var compressHtml = function() {
+var compressHtml = function( targetPath ) {
 
-    var comm = [
+    if ( !targetPath ) {
 
-        'java -jar ',
-        path.join( __dirname, '../../', idtconfig.htmlMin ),
-        ' ',
+        _.each( userConfig.buildPath, function ( path, key ) {
 
-        '--remove-style-attr ',
-        '--remove-link-attr ',
-        '--remove-script-attr ',
-        // '--compress-js ',
-        '--compress-css ',
-        // '--nomunge ',
-        // '--js-compressor closure ',
-        // '--closure-opt-level advanced ',
+            compressHtml( path );
 
-        '--type html --recursive -o ',
-        path.join( userConfig.buildPath, path.basename( userConfig.templates ) ),
-        ' ',
-        path.join( userConfig.output, path.basename( userConfig.templates ) )
+        } );
 
-    ].join( '' );
+        return;
 
-    utils.clog.cmd( 'running ' + comm );
+    }
 
-    shell.exec( comm, function( code, output ) {
-        utils.clog.nor( 'Exit code: ' + utils.errorMaps[ code ] );
-        // console.log( 'Program output:', output );
-        afterBuild();
-    } );
+    runner.htmlmin( 
+        targetPath, 
+        path.join( userConfig.output ) );
 
 };
 
@@ -298,6 +298,7 @@ var buildRootCopy = function() {
     // 压缩html
     if ( isRelease ) {
         compressHtml();
+        afterBuild();
         return;
     }
 
@@ -392,10 +393,28 @@ function clearAfter () {
         async: false
     } );
 
-    comm = [
+    clearAfterTarget();
+
+}
+
+function clearAfterTarget( targetPath ) {
+
+    if ( !targetPath ) {
+
+        _.each( userConfig.buildPath, function ( tpath, key ) {
+            clearAfterTarget( tpath );
+            !( parseInt( key ) == key )
+                && runner.sp( tpath, key )
+                && runner.reempty( tpath );
+        } );
+
+        return;
+    }
+
+    var comm = [
 
         'find ',
-        userConfig.buildPath,
+        targetPath,
         ' -name "*.less" | xargs rm'
 
     ].join( '' );
@@ -423,6 +442,10 @@ module.exports = function( dirs, options ) {
     userBuilds = dirs;
     isRelease = options.release;
     isDebugRemote = options.debugremote;
+
+    // 对buildpath做处理，统一作为Array/Object处理
+    typeof( userConfig.buildPath ) == 'string'
+        && ( userConfig.buildPath = [ userConfig.buildPath ] );
 
     // 判断是不是需要对远程调试进行build
     if ( userConfig.wsWeinreDebug != 'off' && isDebugRemote ) {

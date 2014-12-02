@@ -4,6 +4,11 @@
 
 module.exports = {
 
+    // 分离静态资源的脚本
+    shell: {
+        sp: 'separate_static.sh'
+    },
+
     configName: 'idt-config.js',
 
     tempConfig: '.idt-config',
@@ -18,6 +23,14 @@ module.exports = {
         baseUrl: './',
         packages: [ ],
         combine: { }
-    }
+    },
+
+    copyright: 'copyright.txt',
+
+    mock: [
+        '//mock your velocity/ajax data\n',
+        'module.exports = {\n\n\t\n',
+        '}'
+    ].join( '\n' )
 
 };

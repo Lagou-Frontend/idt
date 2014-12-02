@@ -134,6 +134,16 @@ module.exports = {
 
     },
 
+    src2asset: function ( spath ) {
+
+        if ( spath.indexOf( 'src' ) == 0 ) {
+            spath = spath.replace( 'src', 'asset' )
+        }
+
+        return spath;
+
+    },
+
     getPathDir: function( pathl ) {
 
         var targetPath;

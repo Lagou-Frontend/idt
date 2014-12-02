@@ -35,10 +35,10 @@ program
     } );
 
 program
-    .command( 'ceconfig' )
-    .description( 'create `idt-config` for your project' )
-    .action( function () {
-        clis.ceconfig.call( program );
+    .command( 'ceconfig <type>' )
+    .description( 'create config for your project. <type> : `main` / `more`' )
+    .action( function ( type ) {
+        clis.ceconfig.call( program, type );
     } );
 
 program

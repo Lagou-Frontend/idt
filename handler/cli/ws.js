@@ -52,7 +52,7 @@ var startWs = function() {
 
 var ceIdtConfig = function () {
 
-    require( './ceconfig' )( startWs );
+    require( './ceconfig' )( 'main', startWs );
 
 };
 
@@ -60,7 +60,8 @@ module.exports = function( action, options ) {
 
     var program = this;
     configFile = program.config;
-    utils.clog.cmd( 'running idt ws(webserver) %s, use ' + configFile, action );
+    utils.clog.cmd( 'running idt ws(webserver) ' 
+        + action + ', use ' + configFile );
 
     enableWeinreDebug = options.remote;
     weinreDebugPort = options.portfordebug;
