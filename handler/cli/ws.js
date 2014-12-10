@@ -28,11 +28,11 @@ var startWs = function() {
     // start
     var comm = [
 
-        'grunt --gruntfile ',
+        'grunt --gruntfile "',
         path.join( __dirname, '../../', idtconfig.wsName ),
-        ' --configpath ',
+        '" --configpath "',
         path.join( dir, configFile ),
-        ' --wsweinredebug ',
+        '" --wsweinredebug ',
         enableWeinreDebug,
         ' --weinredebugport ',
         weinreDebugPort,

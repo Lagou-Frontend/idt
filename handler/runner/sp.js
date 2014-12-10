@@ -14,11 +14,11 @@ module.exports = function( targetpath, key ) {
 
     var comm = [
 
-        'sh ',
+        'sh "',
         path.resolve( __dirname, '../shell', idtconfig.shell.sp ),
-        ' ',
+        '" "',
         targetpath,
-        ' "',
+        '" "',
         key,
         '"'
 

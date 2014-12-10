@@ -14,9 +14,9 @@ module.exports = function( output, source ) {
 
     var comm = [
 
-        'java -jar ',
+        'java -jar "',
         path.join( __dirname, '../../', idtconfig.htmlMin ),
-        ' ',
+        '" ',
 
         '--remove-style-attr ',
         '--remove-link-attr ',
@@ -27,10 +27,11 @@ module.exports = function( output, source ) {
         // '--js-compressor closure ',
         // '--closure-opt-level advanced ',
 
-        '--type html --recursive -o ',
+        '--type html --recursive -o "',
         output,
-        ' ',
-        source
+        '" "',
+        source,
+        '"'
 
     ].join( '' );
 

@@ -56,8 +56,9 @@ var deleteTemp = function() {
 
     var comm = [
 
-        'rm -f ',
-        path.join( currentDir, idtconfig.tempConfig )
+        'rm -f "',
+        path.join( currentDir, idtconfig.tempConfig ),
+        '"'
 
     ].join( '' );
 
@@ -84,8 +85,9 @@ var deleteSingleModuleConf = function( item ) {
 
     var comm = [
 
-        'rm -f ',
-        path.join( currentDir, item, idtconfig.moduleConfig )
+        'rm -f "',
+        path.join( currentDir, item, idtconfig.moduleConfig ),
+        '"'
 
     ].join( '' );
 
@@ -191,10 +193,11 @@ var runCopy = function( fileName ) {
 
     var comm = [
 
-        'cp -f ',
+        'cp -f "',
         path.join( currentDir, fileName ),
-        ' ',
-        path.join( userConfig.output, path.dirname( fileName ) )
+        '" "',
+        path.join( userConfig.output, path.dirname( fileName ) ),
+        '"'
 
     ].join( '' );
 
@@ -229,10 +232,11 @@ var copyAssets = function( targetPath ) {
 
     var comm = [
 
-        'cp -rf ',
-        path.join( userConfig.output, '/*' ),
-        ' ',
-        path.join( targetPath )
+        'cp -rf "',
+        path.join( userConfig.output, '/' ),
+        '" "',
+        path.join( targetPath ),
+        '"'
 
     ].join( '' );
 
@@ -252,8 +256,9 @@ var deleteAssets = function() {
 
     var comm = [
 
-        'rm -rf ',
-        path.join( userConfig.output )
+        'rm -rf "',
+        path.join( userConfig.output ),
+        '"'
 
     ].join( '' );
 
@@ -337,8 +342,9 @@ function delConfigfile( file ) {
 
     var comm = [
 
-        'rm -f ',
-        file
+        'rm -f "',
+        file,
+        '"'
 
     ].join( '' );
 
@@ -413,9 +419,9 @@ function clearAfterTarget( targetPath ) {
 
     var comm = [
 
-        'find ',
+        'find "',
         targetPath,
-        ' -name "*.less" | xargs rm'
+        '" -name "*.less" | xargs rm'
 
     ].join( '' );
 

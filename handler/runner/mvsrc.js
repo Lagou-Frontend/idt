@@ -14,10 +14,11 @@ module.exports = function( targetpath ) {
 
     var comm = [
 
-        'mv ', 
+        'mv "', 
         path.join( targetpath, 'src' ),
-        ' ',
-        path.join( targetpath, 'asset' )
+        '" "',
+        path.join( targetpath, 'asset' ),
+        '"'
 
     ].join( '' );
 

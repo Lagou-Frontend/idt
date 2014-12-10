@@ -22,10 +22,11 @@ function cecopyright() {
 
     var comm = [
 
-        'cp -f ',
+        'cp -f "',
         scopyright,
-        ' ',
-        tcopyright
+        '" "',
+        path.dirname( tcopyright ),
+        '"'
 
     ].join( '' );
 
@@ -45,10 +46,11 @@ function cemoduleconf () {
 
     var comm = [
 
-        'cp -f ',
+        'cp -f "',
         smoduleconf,
-        ' ',
-        tmoduleconf
+        '" "',
+        path.dirname( tmoduleconf ),
+        '"'
 
     ].join( '' );
 
@@ -89,10 +91,11 @@ function cemain( callback ) {
 
     var comm = [
 
-        'cp -f ',
+        'cp -f "',
         path.join( __dirname, '../../store', idtconfig.configName ),
-        ' ',
-        configfile
+        '" "',
+        path.dirname( configfile ),
+        '"'
 
     ].join( '' );
 

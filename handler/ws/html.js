@@ -88,9 +88,11 @@ var createCommonMock = function( callback ) {
 
     var comm = [
 
-        'cp -rf ',
-        source, ' ',
-        target
+        'cp -rf "',
+        source, 
+        '" "',
+        target,
+        '"'
 
     ].join( '' );
 
