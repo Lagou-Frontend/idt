@@ -232,9 +232,9 @@ var copyAssets = function( targetPath ) {
 
     var comm = [
 
-        'cp -rf "',
-        path.join( userConfig.output, '/' ),
-        '" "',
+        'cp -rf ',
+        path.join( userConfig.output, '/*' ),
+        ' "',
         path.join( targetPath ),
         '"'
 
