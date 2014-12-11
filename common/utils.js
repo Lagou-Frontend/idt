@@ -166,6 +166,12 @@ module.exports = {
 
     },
 
+    trimExt: function ( tp ) {
+
+        return tp.substring( 0, tp.lastIndexOf( '.' ) );
+
+    },
+
     isHtml: function( req ) {
 
         var url = req.url;

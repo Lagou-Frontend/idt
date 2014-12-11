@@ -26,6 +26,15 @@ program
     } );
 
 program
+    .command( 'bat <action>' )
+    // .option( '-c, --common', 'enable common mock data' )
+    .description( 'run batch to export html file use mock data. '
+        + '<action> now only has `html` option' )
+    .action( function ( action ) {
+        clis.bat.call( program, action );
+    } );
+
+program
     .command( 'build [dirs...]' )
     .option( '-d, --debugremote', 'enable weinre debug' )
     .option( '-r, --release', 'release you project' )

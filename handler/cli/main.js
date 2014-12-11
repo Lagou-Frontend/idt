@@ -10,6 +10,8 @@ module.exports = {
 
     ceconfig: require( './ceconfig' ),
 
-    install: require( './install' )
+    install: require( './install' ),
+
+    bat: require( './bat' )
 
 };

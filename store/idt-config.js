@@ -67,7 +67,7 @@ module.exports = {
     webContent: webContent,
 
     // velocity的template模板根目录【只需要修改最后一个参数即可】
-    templates: path.join( webContent, secondary, 'tpl' ),
+    templates: path.join( webContent, secondary, 'template' ),
 
     // 单路径整体build【String】
     // buildPath: '../outs/outall',
@@ -111,6 +111,23 @@ module.exports = {
             pattern: /^\/template\/mobile\//,
             replace: '\/'
         }
+
+    },
+
+    // 批处理按照对应的模板文件，生成相同模板，不同静态页面的配置
+    batch2Html: {
+
+        // 指定数据源目录
+        path: path.join( webContent, 'mock/batch' ),
+
+        // 指定静态文件输出目录
+        out: path.join( webContent, 'mock/batch_out' ),
+
+        // 模板路径在上面配置的`template`路径下
+        tpl: '404.html',
+
+        // 数据的data路径是自动生成
+        // 在 path.join( 'mock/batch', tpl[ 上面的tpl路径去掉.html的文件夹 ] )
 
     },
 
