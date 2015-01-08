@@ -23,8 +23,12 @@ var userBuilds;
 var isRelease;
 var isDebugRemote;
 
+var isMultiple;
+
 // 针对子文件夹的build
 var buildMulti = function() {
+
+    isMultiple = true;
 
     userBuilds.forEach( function( item, index ) {
 
@@ -82,6 +86,9 @@ var deleteTemp = function() {
 };
 
 var deleteSingleModuleConf = function( item ) {
+
+    if ( itemHasModuleConfig[ item ] )
+        return;
 
     var comm = [
 
@@ -158,6 +165,12 @@ var compressHtmlForItem = function() {
 
 };
 
+/**
+ * 用来判断针对某个子文件夹构建的时候，是否存在`module.conf`文件
+ * @type {Object}
+ */
+var itemHasModuleConfig = { };
+
 var buildItem = function( target, item ) {
 
     var targetPath = utils.getPathDir( target );
@@ -169,7 +182,11 @@ var buildItem = function( target, item ) {
     // 检查是否有`module.config`
     var module = path.join( targetPath, idtconfig.moduleConfig );
     if ( !fs.existsSync( module ) ) {
+        itemHasModuleConfig[ item ] = false;
         fs.writeFileSync( module, JSON.stringify( idtconfig.moduleExample ) );
+    }
+    else {
+        itemHasModuleConfig[ item ] = true;
     }
 
     // 生成动态idt-config，修改现有路径
@@ -314,6 +331,8 @@ var buildRootCopy = function() {
 // 对根目录的build
 var buildRoot = function( configfile ) {
 
+    isMultiple = false;
+
     // root的build需要自己先写好idt-config.js文件
     var comm = [
 
@@ -408,10 +427,28 @@ function clearAfterTarget( targetPath ) {
     if ( !targetPath ) {
 
         _.each( userConfig.buildPath, function ( tpath, key ) {
-            clearAfterTarget( tpath );
-            !( parseInt( key ) == key )
-                && runner.sp( tpath, key )
-                && runner.reempty( tpath );
+            // 如果是针对子目录的构建
+            if ( isMultiple ) {
+                userBuilds.forEach( function( item, index ) {
+                    var targetPath = utils.getPathDir( path.join( currentDir, item ) );
+                    if ( !~targetPath.lastIndexOf( path.basename( item ) ) ) {
+                        item = path.dirname( item );
+                    }
+                    item = utils.src2asset( item );
+                    var ntpath = path.join( tpath, item );
+                    clearAfterTarget( ntpath );
+                    !( parseInt( key ) == key )
+                        && runner.sp( ntpath, key )
+                        && runner.reempty( ntpath );
+                } );
+            }
+            else {
+                // 针对单个项目的构建
+                clearAfterTarget( tpath );
+                !( parseInt( key ) == key )
+                    && runner.sp( tpath, key )
+                    && runner.reempty( tpath );
+            }
         } );
 
         return;

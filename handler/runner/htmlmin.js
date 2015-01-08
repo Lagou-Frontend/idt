@@ -18,6 +18,9 @@ module.exports = function( output, source ) {
         path.join( __dirname, '../../', idtconfig.htmlMin ),
         '" ',
 
+        '--remove-intertag-spaces ',
+        '--remove-quotes ',
+        // '--remove-surrounding-spaces all ',
         '--remove-style-attr ',
         '--remove-link-attr ',
         '--remove-script-attr ',
