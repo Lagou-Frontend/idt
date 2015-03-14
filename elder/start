@@ -1,6 +1,0 @@
-#!/bin/bash
-
-#make this runnable: sudo chmod +x ./start
-#exit: ctrl/comm + z
-
-grunt --gruntfile Webserver.js

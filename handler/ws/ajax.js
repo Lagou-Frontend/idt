@@ -44,7 +44,7 @@ var make = function( url2filename, fullpath, req, res ) {
             // 带入请求对象，此function需要返回object
             fullpathRequired = fullpathRequired.call( req, urlparser( req.url ) );
         }
-        var context = _.extend( fullpathRequired, commonPathRequired );
+        var context = _.extend( commonPathRequired, fullpathRequired );
 
         // 输出ajax请求
         utils.clog.tip( 'ajax: ' + req.url );

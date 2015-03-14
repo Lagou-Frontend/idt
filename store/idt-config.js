@@ -50,7 +50,16 @@ var weinreDebugHost = '' || 'localhost';
 var replaces = {
     exclude: [ '*' ],
     include: [ '*.html' ],
-    replacements: [ { from: /\#parse\( \"/g, to: '#parse( "mobile/tpl/' } ]
+    replacements: [
+        // { from: /\#parse\( \"/g, to: '#parse( "mobile/tpl/' },
+        /**
+         * html中build之后需要忽略的代码段，请使用：
+         * <!-- idt-build-ignore-start -->
+         * <!-- idt-build-ignore-end -->
+         * 进行包裹
+         */
+        { from: /<!--\s*idt-build-ignore-start\s*-->(.|[\r\n\t])*?<!--\s*idt-build-ignore-end\s*-->/g, to: '' }
+     ]
 };
 
 // 二级目录设置【一般不需修改】
@@ -66,8 +75,19 @@ module.exports = {
     // webserver的项目根目录【一般不需修改】，即为当前`pwd`的目录
     webContent: webContent,
 
-    // velocity的template模板根目录【只需要修改最后一个参数即可】
-    templates: path.join( webContent, secondary, 'template' ),
+    // 模板引擎根目录【只需要修改最后一个参数即可】
+    templates: path.join( webContent, secondary, '.' ),
+
+    // 模板引擎切换 django / velocity [ 默认velocity ]
+    /**
+     * django模板引擎采用'A wrapper of Django's template engine'方式
+     * 详见：https://www.npmjs.com/package/django
+     * 在启用之前请确保python环境已经ready，然后安装django:
+     * # pip install -v Django==1.7
+     * //or
+     * # easy_install "Django==1.7"
+     */
+    tplEngine: 'django',
 
     // 单路径整体build【String】
     // buildPath: '../outs/outall',
@@ -95,21 +115,6 @@ module.exports = {
         tpl: {
             pattern: /^\/custom\//,
             replace: '/tpl/custom/'
-        },
-
-        center: {
-            pattern: /^\/center\//,
-            replace: '/tpl/center/'
-        },
-
-        mobile: {
-            pattern: /^\/mobile\//,
-            replace: '\/'
-        },
-
-        template2mobile: {
-            pattern: /^\/template\/mobile\//,
-            replace: '\/'
         }
 
     },
@@ -137,8 +142,8 @@ module.exports = {
     wsNoNeed2TrimDotJs: false,
 
     // mock 相关配置【一般不需修改】
-    mockCommon: 'commonmock/common.js',
-    mockVelocity: path.join( webContent, secondary, 'mock/velocity' ),
+    mockCommon: 'commonmock/common.js', // 此项会拼接下面的两个前缀路径
+    mockTemplate: path.join( webContent, secondary, 'mock/html' ),
     mockAjax: path.join( webContent, secondary, 'mock/ajax' ),
 
     /**

@@ -31,7 +31,14 @@ var trimUrlQuery = function( url ) {
     var host = parsed.host ? parsed.host : '';
     var pathname = parsed.pathname ? parsed.pathname : 'about:blank;';
 
-    return protocol + host + pathname;
+    var returner = protocol + host + pathname;
+
+    // 如果以'/'结尾，则去掉
+    if ( returner.lastIndexOf( '/' ) == ( returner.length - 1 ) ) {
+        returner = returner.substring( 0, returner.length - 1 );
+    }
+
+    return returner;
 
 };
 

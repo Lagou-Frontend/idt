@@ -29,7 +29,7 @@ module.exports = {
     copyright: 'copyright.txt',
 
     mock: [
-        '//mock your velocity/ajax data\n',
+        '//mock your template/ajax data\n',
         'module.exports = {\n\n\t\n',
         '}'
     ].join( '\n' )

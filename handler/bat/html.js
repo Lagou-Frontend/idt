@@ -13,6 +13,7 @@ var Engine = require( 'velocity' ).Engine;
 
 var idtconfig = require( '../../config' );
 var utils = require( '../../common/utils' );
+var engines = require( '../../common/engines' );
 
 var configFile;
 var config;
@@ -53,21 +54,22 @@ function doExport() {
 
 function writeFile( value, key, list ) {
 
-    var engine = new Engine( {
-        root: config.templates,
-        template: velocityTpl
-    } );
+    var engine = engines.getEngine( velocityTpl, config );
 
-    var output = engine.render( 
-        require( path.resolve( dataDir, value ) ) );
+    var output;
+    engine.render( require( path.resolve( dataDir, value ) ),
+        function ( o ) {
 
-    // write
-    var ofilename = path.join( outDir, utils.trimExt( value ) + '.html' );
-    fs.writeFile( 
-        ofilename,
-        output );
- 
-    utils.clog.tell( 'write file success: ' + ofilename );
+            output = o;
+            // write
+            var ofilename = path.join( outDir, utils.trimExt( value ) + '.html' );
+            fs.writeFile(
+                ofilename,
+                output );
+
+            utils.clog.tell( 'write file success: ' + ofilename );
+
+        } );
 
 }
 
