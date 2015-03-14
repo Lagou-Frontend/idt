@@ -2,6 +2,8 @@
  * 获取模板渲染引擎
  */
 
+var util = require( 'util' );
+
 /**
  * velocity的模板引擎
  * @type {exports.Engine|*}
@@ -12,6 +14,11 @@ var velocityEngine = require( 'velocity' ).Engine;
  * django的模板引擎
  */
 var djangoEngine = require( 'django' );
+
+/**
+ * smarty的模板引擎
+ */
+var smartyEngine = require( 'nsmarty' );
 
 module.exports = {
 
@@ -61,6 +68,31 @@ module.exports = {
                                 throw err;
                             callback( out );
                         } );
+                }
+            },
+
+            smarty: {
+                render: function ( context, callback ) {
+
+                    // 特殊处理
+                    if ( config.templates.lastIndexOf( '/' )
+                        != config.templates.length - 1 ) {
+                        config.templates += '/';
+                    }
+                    smartyEngine.tpl_path = config.templates;
+                    smartyEngine.clearCache();
+
+                    var readable = smartyEngine.assign( tplFile, context );
+                    var out = '';
+                    readable.on( 'data', function( chunk ) {
+                        if ( !chunk )
+                            return;
+                        out += chunk.toString();
+                    } );
+                    readable.on( 'end', function() {
+                        callback( out );
+                    } );
+
                 }
             }
 

@@ -183,7 +183,7 @@ module.exports = {
 
         var url = req.url;
 
-        return checkUrlTail( url, 'html' );
+        return checkUrlTail( url, 'html' ) || checkUrlTail( url, 'tpl' );
 
     },
 

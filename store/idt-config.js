@@ -78,16 +78,22 @@ module.exports = {
     // 模板引擎根目录【只需要修改最后一个参数即可】
     templates: path.join( webContent, secondary, '.' ),
 
-    // 模板引擎切换 django / velocity [ 默认velocity ]
+    // 模板引擎切换: smarty / django / velocity [ 默认velocity ]
     /**
+     * velocity模板引擎采用：
+     * https://www.npmjs.com/package/velocity
+     *
      * django模板引擎采用'A wrapper of Django's template engine'方式
      * 详见：https://www.npmjs.com/package/django
      * 在启用之前请确保python环境已经ready，然后安装django:
      * # pip install -v Django==1.7
      * //or
      * # easy_install "Django==1.7"
+     *
+     * smarty模板引擎采用：
+     * https://www.npmjs.com/package/nsmarty
      */
-    tplEngine: 'django',
+    tplEngine: 'smarty',
 
     // 单路径整体build【String】
     // buildPath: '../outs/outall',
