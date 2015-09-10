@@ -1,6 +1,8 @@
 idt
 ===
 
+(已停止维护此资源，新版本参见：https://github.com/guananddu/idt/tree/idt4none-contextify)
+
 Integration Develop Tool [ 集成开发工具 ]
 
 ### 安装
